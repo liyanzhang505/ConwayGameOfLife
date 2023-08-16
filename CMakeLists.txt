@@ -16,6 +16,8 @@ set(PROJECT_SOURCES
         main.cpp
         mainwindow.cpp
         mainwindow.h
+        mygridwidget.h
+        mygridwidget.cpp
         mainwindow.ui
 )
 
