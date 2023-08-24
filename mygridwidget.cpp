@@ -1,17 +1,72 @@
 #include "mygridwidget.h"
 #include <QPainter>
 #include <iostream>
+#include <QPalette>
 
 MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(20), rows(20)
 {
+    game = new ConwayGame(rows, cols);
+    initBackgroud();
     initCells();
-    this->setStyleSheet("background-color: white;");
+    initTimer();
 }
+
+
 
 MyGridWidget::~MyGridWidget()
 {
     destroyCells();
+    delete timer;
 }
+
+void MyGridWidget::initBackgroud()
+{
+    QPalette pal = QPalette();
+    pal.setColor(QPalette::Window, Qt::white);
+    this->setAutoFillBackground(true);
+    this->setPalette(pal);
+    this->show();
+}
+
+void MyGridWidget::startEvolve()
+{
+    timer->start();
+     std::cout << "Start Evolve..." << std::endl;
+}
+
+void MyGridWidget::initTimer()
+{
+    timer = new QTimer(this);
+    timer->setInterval(500);
+    connect(timer, SIGNAL(timeout()), this, SLOT(UpdateCellStates()));
+}
+
+void MyGridWidget::stopTimer()
+{
+    timer->stop();
+}
+
+void MyGridWidget::UpdateCellStates()
+{
+    int comeBound = 0;
+    for (int row = 0; row < rows; row++) {
+        comeBound += pCells[row * cols];
+        comeBound += pCells[(row + 1) * cols -1];
+    }
+    for (int col = 1; col < cols - 1; col++) {
+        comeBound += pCells[col];
+        comeBound += pCells[(rows -1) * cols + col];
+    }
+
+    if (comeBound > 0) {
+        autoExpandGrid();
+    }
+
+    std::cout << "here1_UpdateCellStates" << std::endl;
+    game->evolve(pCells);
+    update();
+}
+
 
 void MyGridWidget::initCells()
 {
@@ -38,7 +93,6 @@ double MyGridWidget::calculateCellHeight()
 
 void MyGridWidget::paintEvent(QPaintEvent* event)
 {
-
     QPainter painter(this);
 
     // Line setting, set line to gray with width of 1.
@@ -47,7 +101,6 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
     QPen pen(penColor);
     pen.setWidth(1);
     painter.setPen(pen);
-
 
     // Draw horizontal lines
     double cellWidth = calculateCellWidth();
@@ -93,4 +146,28 @@ void MyGridWidget::mousePressEvent(QMouseEvent *e)
     int last = pCells[row * cols + col];
     pCells[row * cols + col] = last == 1 ? 0 : 1;
     update();
+}
+
+void MyGridWidget::autoExpandGrid()
+{
+    int rows2 = rows * 2;
+    int cols2 = cols * 2;
+    int* pCells2 = new int[rows2 * cols2];
+    memset(pCells2, 0, rows2 * cols2 * sizeof(int));
+
+    int startRowInx = rows2 / 4;
+    int startColInx = cols2 / 4;
+
+    for (int row = 0; row < rows; row++)
+    {
+        std:memcpy(pCells2 + (startRowInx + row) * cols2 + startColInx, pCells +  row* cols, cols * sizeof(int));
+    }
+
+    // todo
+    int* tmp = pCells;
+    pCells = pCells2;
+    rows = rows2;
+    cols = cols2;
+    delete[] tmp;
+    game->reset(rows, cols);
 }

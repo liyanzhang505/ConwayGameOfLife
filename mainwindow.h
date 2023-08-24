@@ -15,9 +15,12 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+private slots:
+    void on_autoEvolveBtn_clicked();
+    void on_pauseBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     MyGridWidget* grid;
-
 };
 #endif

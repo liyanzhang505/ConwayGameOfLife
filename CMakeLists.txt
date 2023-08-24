@@ -19,6 +19,9 @@ set(PROJECT_SOURCES
         mygridwidget.h
         mygridwidget.cpp
         mainwindow.ui
+        gamebase.h
+        conwaygame.h
+        conwaygame.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
