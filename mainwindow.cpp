@@ -34,3 +34,9 @@ void MainWindow::on_pauseBtn_clicked()
     grid->stopTimer();
 }
 
+
+void MainWindow::on_nextStepBtn_clicked()
+{
+    grid->nextStep();
+}
+

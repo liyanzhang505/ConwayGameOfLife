@@ -16,6 +16,7 @@ public:
     ~MyGridWidget();
     void startEvolve();
     void stopTimer();
+    void nextStep();
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

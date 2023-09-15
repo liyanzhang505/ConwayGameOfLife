@@ -46,6 +46,14 @@ void MyGridWidget::stopTimer()
     timer->stop();
 }
 
+void MyGridWidget::nextStep()
+{
+    timer->stop();
+    UpdateCellStates();
+}
+
+
+
 void MyGridWidget::UpdateCellStates()
 {
     int comeBound = 0;
@@ -62,6 +70,7 @@ void MyGridWidget::UpdateCellStates()
         autoExpandGrid();
     }
 
+    std::cout << "come bound:" << comeBound << std::endl;
     std::cout << "here1_UpdateCellStates" << std::endl;
     game->evolve(pCells);
     update();

@@ -19,6 +19,8 @@ private slots:
     void on_autoEvolveBtn_clicked();
     void on_pauseBtn_clicked();
 
+    void on_nextStepBtn_clicked();
+
 private:
     Ui::MainWindow *ui;
     MyGridWidget* grid;

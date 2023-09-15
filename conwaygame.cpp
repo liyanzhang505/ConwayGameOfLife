@@ -41,16 +41,20 @@ bool ConwayGame::isAlive(int *grid, int row, int col)
 
     int aliveCount = 0;
 
-    for (int i = row - 1; i <= row + 1; i++)
+    std::cout << "row: " << row << " col: " << col << " hhhhh1111 "<< std::endl;
+
+    for (int i = std::max(row - 1, 0); i < std::min(row + 2, rows); i++)
     {
-        for (int j = col - 1; j <= col + 1; j++)
+        for (int j = std::max(col - 1, 0); j < std::min(col + 2, cols); j++)
         {
+            std::cout << "i: " << i <<  " j" << j << std::endl;
             aliveCount += grid[i * cols + j];
         }
     }
 
     // minus its own state
     aliveCount -= grid[row * cols + col] & 1;
+
 
     if ((3 == aliveCount) || ((2 == aliveCount) && (1 == grid[row * cols +  col])))
     {
