@@ -2,21 +2,28 @@
 #include <QPainter>
 #include <iostream>
 #include <QPalette>
+#include "BirthSurviveRule.h"
+#include "GridSizeOps.h"
 
-MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(20), rows(20)
+MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(256), rows(256)
 {
-    game = new ConwayGame(rows, cols);
+    initGame();
     initBackgroud();
     initCells();
     initTimer();
 }
 
 
-
 MyGridWidget::~MyGridWidget()
 {
-    destroyCells();
+    destory();
+}
+
+void MyGridWidget::destory()
+{
+    delete game;
     delete timer;
+    destroyCells();
 }
 
 void MyGridWidget::initBackgroud()
@@ -28,16 +35,57 @@ void MyGridWidget::initBackgroud()
     this->show();
 }
 
+
+void MyGridWidget::initGame()
+{
+    expandCount = 0;
+    generations = 0;
+    BirthSurviveRule bsRule = BirthSurviveRule({3}, {2, 3});
+    game = new ConwayGame(rows, cols);
+}
+
+void MyGridWidget::clearDisplay()
+{
+    timer->stop();
+    std::memset(pCells, 0, rows * cols * sizeof(int));
+    generations = 0;
+    emit generationChanged(generations);
+    update();
+}
+
+void MyGridWidget::changeGridSize(int size)
+{
+    timer->stop();
+    delete game;
+    destroyCells();
+
+    qDebug() << "size:" << size;
+    if (Grid256 == size) {
+        rows = 256;
+        cols = 256;
+    } else if (Grid20 == size) {
+        rows = 20;
+        cols = 20;
+    }
+    generations = 0;
+    expandCount = 0;
+    emit generationChanged(generations);
+    initGame();
+    initCells();
+    update();
+}
+
+
 void MyGridWidget::startEvolve()
 {
     timer->start();
-     std::cout << "Start Evolve..." << std::endl;
+    std::cout << "Start Evolve..." << std::endl;
 }
 
 void MyGridWidget::initTimer()
 {
     timer = new QTimer(this);
-    timer->setInterval(500);
+    timer->setInterval(100);
     connect(timer, SIGNAL(timeout()), this, SLOT(UpdateCellStates()));
 }
 
@@ -46,10 +94,36 @@ void MyGridWidget::stopTimer()
     timer->stop();
 }
 
+void MyGridWidget::updateInterval(int value)
+{
+    timer->setInterval(value);
+}
+
 void MyGridWidget::nextStep()
 {
     timer->stop();
     UpdateCellStates();
+}
+
+void MyGridWidget::setProbabilityOfLive(qreal probabilityOfLive)
+{
+    this->probabilityOfLive = probabilityOfLive;
+}
+
+void MyGridWidget::randomInitGrid()
+{
+    clearDisplay();
+    srand(time(0));
+    for(int i = 0; i < rows; ++i) {
+        for(int j = 0; j < cols; ++j) {
+            if((rand() / double(RAND_MAX)) <= probabilityOfLive) {
+                pCells[i * cols + j] = 1;
+            } else {
+                 pCells[i * cols + j] = 0;
+            }
+        }
+    }
+    update();
 }
 
 
@@ -66,13 +140,16 @@ void MyGridWidget::UpdateCellStates()
         comeBound += pCells[(rows -1) * cols + col];
     }
 
-    if (comeBound > 0) {
+    if (rows != 256 && comeBound > 0) {
+        expandCount += 1;
         autoExpandGrid();
     }
 
     std::cout << "come bound:" << comeBound << std::endl;
     std::cout << "here1_UpdateCellStates" << std::endl;
     game->evolve(pCells);
+    generations += 1;
+    emit generationChanged(generations);
     update();
 }
 
@@ -103,12 +180,21 @@ double MyGridWidget::calculateCellHeight()
 void MyGridWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
+    qreal lineWidth = 0;
+    qreal alpha = 0;
 
-    // Line setting, set line to gray with width of 1.
+    if (rows != 256) {
+        lineWidth = std::max(0.0, 1 - expandCount* 0.2);
+        alpha = std::max(0.0, 0.4 - expandCount * 0.1);
+        std::cout << "alpha: " << alpha << "lineWidth: " << lineWidth << std::endl;
+    }
+
+    // Line setting, set line to back with width of 1.
     QColor penColor = QColor(Qt::black);
-    penColor.setAlpha(80);
+    penColor.setAlphaF(alpha);
     QPen pen(penColor);
-    pen.setWidth(1);
+    std::cout << "alpha: " << alpha << "lineWidth: " << lineWidth << std::endl;
+    pen.setWidthF(lineWidth);
     painter.setPen(pen);
 
     // Draw horizontal lines
@@ -136,7 +222,7 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
             {
                 double x = calculateCellWidth() * col;
                 double y = calculateCellHeight() * row;
-                QRect cellField(x + 1, y + 1, calculateCellWidth() - 1, calculateCellHeight() - 1);
+                QRect cellField(x + lineWidth, y + lineWidth, calculateCellWidth() - lineWidth, calculateCellHeight() - lineWidth);
                 painter.setBrush(QBrush(Qt::black));
                 painter.fillRect(cellField, painter.brush());
             }

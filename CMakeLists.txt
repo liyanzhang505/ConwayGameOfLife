@@ -22,6 +22,8 @@ set(PROJECT_SOURCES
         gamebase.h
         conwaygame.h
         conwaygame.cpp
+        birthSurviveRule.h
+        GridSizeOps.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

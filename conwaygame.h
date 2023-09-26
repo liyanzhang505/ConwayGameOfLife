@@ -3,12 +3,15 @@
 #include "GameBase.h"
 
 
+
 class ConwayGame: public GameBase
 {
+
 public:
-    ConwayGame(int rows, int cols);
+    ConwayGame(int rows, int cols, BirthSurviveRule bsRule = BirthSurviveRule({3}, {2, 3}));
     void evolve(int* grid) override;
     void reset(int rows, int cols) override;
+    ~ConwayGame();
 private:
     void initBuff();
     bool isAlive(int* grid, int row, int col);
