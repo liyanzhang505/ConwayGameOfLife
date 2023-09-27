@@ -22,6 +22,7 @@ public:
     void randomInitGrid();
     void clearDisplay();
     void changeGridSize(int size);
+    void changeGame(int index);
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

@@ -2,7 +2,7 @@
 #include <iostream>
 
 
-ConwayGame::ConwayGame(int rows, int cols, BirthSurviveRule bsRule): GameBase(rows, cols, bsRule)
+ConwayGame::ConwayGame(int rows, int cols, BirthSurviveRule* bsRule) : GameBase(rows, cols, bsRule)
 {
     initBuff();
 }
@@ -39,6 +39,7 @@ void ConwayGame::reset(int rows, int cols)
 ConwayGame::~ConwayGame()
 {
     delete[] pBuff;
+    delete bsRule;
 }
 
 bool ConwayGame::isAlive(int *grid, int row, int col)
@@ -59,14 +60,14 @@ bool ConwayGame::isAlive(int *grid, int row, int col)
 
 
     if (grid[row * cols + col] == 1) {
-        for (int surviveRule : bsRule.getSurviveSetting()) {
+        for (int surviveRule : bsRule->getSurviveSetting()) {
             if (surviveRule == aliveCount) {
                 return true;
             }
         }
         return false;
     } else {
-        for (int birthRule : bsRule.getBirthSetting()) {
+        for (int birthRule : bsRule->getBirthSetting()) {
             if (birthRule == aliveCount) {
                 return true;
             }

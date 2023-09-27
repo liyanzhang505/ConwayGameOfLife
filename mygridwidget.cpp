@@ -4,6 +4,7 @@
 #include <QPalette>
 #include "BirthSurviveRule.h"
 #include "GridSizeOps.h"
+#include "GameType.h"
 
 MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(256), rows(256)
 {
@@ -40,8 +41,8 @@ void MyGridWidget::initGame()
 {
     expandCount = 0;
     generations = 0;
-    BirthSurviveRule bsRule = BirthSurviveRule({3}, {2, 3});
-    game = new ConwayGame(rows, cols);
+    BirthSurviveRule* bsRule = new BirthSurviveRule({3}, {2, 3});
+    game = new ConwayGame(rows, cols, bsRule);
 }
 
 void MyGridWidget::clearDisplay()
@@ -51,6 +52,37 @@ void MyGridWidget::clearDisplay()
     generations = 0;
     emit generationChanged(generations);
     update();
+}
+
+void MyGridWidget::changeGame(int index) {
+    delete game;
+    BirthSurviveRule* bsRule = NULL;
+    switch(index) {
+        case CONWAYGAME:
+            bsRule = new BirthSurviveRule({3}, {2, 3});
+            game = new ConwayGame(rows, cols, bsRule);
+            break;
+        case HIGHLIFE:
+            bsRule = new BirthSurviveRule({3, 6}, {2, 3});
+            game = new ConwayGame(rows, cols, bsRule);
+            break;
+        case PSEUDOLIFE:
+            bsRule = new BirthSurviveRule({3, 5, 7}, {2, 3, 8});
+            game = new ConwayGame(rows, cols, bsRule);
+            break;
+        case TWOBYTWO:
+            bsRule = new BirthSurviveRule({3, 6}, {1, 2, 5});
+            game = new ConwayGame(rows, cols, bsRule);
+            break;
+        case MOVE:
+            bsRule = new BirthSurviveRule({3, 6, 8}, {2, 4, 5});
+            game = new ConwayGame(rows, cols, bsRule);
+            break;
+        default:
+            bsRule = new BirthSurviveRule({3}, {2, 3});
+            game = new ConwayGame(rows, cols, bsRule);
+    }
+    clearDisplay();
 }
 
 void MyGridWidget::changeGridSize(int size)

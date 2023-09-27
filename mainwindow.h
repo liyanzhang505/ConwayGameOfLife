@@ -28,6 +28,8 @@ private slots:
 
     void on_gridSizeBox_currentIndexChanged(int index);
 
+    void on_gameBox_currentIndexChanged(int index);
+
 public slots:
     void onGenerationChanged(int value);
 private:
