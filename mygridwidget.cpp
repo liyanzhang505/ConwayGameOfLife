@@ -6,7 +6,7 @@
 #include "GridSizeOps.h"
 #include "GameType.h"
 
-MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(256), rows(256)
+MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_256_SIZE), rows(GRID_256_SIZE)
 {
     initGame();
     initBackgroud();
@@ -85,19 +85,19 @@ void MyGridWidget::changeGame(int index) {
     clearDisplay();
 }
 
-void MyGridWidget::changeGridSize(int size)
+void MyGridWidget::changeGridSize(int index)
 {
     timer->stop();
     delete game;
     destroyCells();
 
-    qDebug() << "size:" << size;
-    if (Grid256 == size) {
-        rows = 256;
-        cols = 256;
-    } else if (Grid20 == size) {
-        rows = 20;
-        cols = 20;
+    qDebug() << "grid index:" << index;
+    if (GRID_256_INDEX == index) {
+        rows = GRID_256_SIZE;
+        cols = GRID_256_SIZE;
+    } else if (GRID_20_INDEX == index) {
+        rows = GRID_20_SIZE;
+        cols = GRID_20_SIZE;
     }
     generations = 0;
     expandCount = 0;
@@ -172,7 +172,7 @@ void MyGridWidget::UpdateCellStates()
         comeBound += pCells[(rows -1) * cols + col];
     }
 
-    if (rows != 256 && comeBound > 0) {
+    if (rows != GRID_256_SIZE && comeBound > 0) {
         expandCount += 1;
         autoExpandGrid();
     }
@@ -215,7 +215,7 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
     qreal lineWidth = 0;
     qreal alpha = 0;
 
-    if (rows != 256) {
+    if (rows != GRID_256_SIZE) {
         lineWidth = std::max(0.0, 1 - expandCount* 0.2);
         alpha = std::max(0.0, 0.4 - expandCount * 0.1);
         std::cout << "alpha: " << alpha << "lineWidth: " << lineWidth << std::endl;

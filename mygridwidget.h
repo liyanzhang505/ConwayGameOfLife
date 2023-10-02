@@ -21,7 +21,7 @@ public:
     void setProbabilityOfLive(qreal pLive);
     void randomInitGrid();
     void clearDisplay();
-    void changeGridSize(int size);
+    void changeGridSize(int index);
     void changeGame(int index);
 protected:
     void paintEvent(QPaintEvent* event) override;
