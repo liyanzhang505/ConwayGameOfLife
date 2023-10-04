@@ -8,11 +8,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->gridLayout->addWidget(grid);
-//    ui->widgetLayout->setStretchFactor(ui->gridLayout, 8);
-//    ui->widgetLayout->setStretchFactor(ui->pannelLayout, 2);
-//    ui->pannelLayout->setStretchFactor(ui->controllPannel, 1);
-//    ui->pannelLayout->setStretchFactor(ui->recordPannel, 1);
-//    ui->pannelLayout->setStretchFactor(ui->otherPannel, 4);
+//    ui->widgetLayout->setStretchFactor(ui->gridLayout, 7);
+//    ui->widgetLayout->setStretchFactor(ui->pannelLayout, 3);
+
 
     ui->timerSlider->setRange(0, 2000);
     ui->timerSlider->setValue(interval);

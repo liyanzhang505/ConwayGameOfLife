@@ -45,307 +45,341 @@
          <enum>QLayout::SetDefaultConstraint</enum>
         </property>
         <item>
-         <layout class="QVBoxLayout" name="controllPannel" stretch="0,0,0,1,1">
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_2" stretch="1,4,1">
-            <item>
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Game</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="gameBox">
-              <item>
-               <property name="text">
-                <string>Conway</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>HighLife</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>PseudoLife</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>2x2 Automata</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer_4">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_11" stretch="1,4,1">
-            <item>
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Grid</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QComboBox" name="gridSizeBox">
-              <property name="font">
-               <font>
-                <family>.AppleSystemUIFont</family>
-               </font>
-              </property>
-              <item>
-               <property name="text">
-                <string>256 X 256</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>20 X 20 Auto Expand</string>
-               </property>
-              </item>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="ClearBtn">
-              <property name="text">
-               <string>Clear</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_10" stretch="1,1,1,1,1">
-            <item>
-             <widget class="QLabel" name="label_4">
-              <property name="text">
-               <string>Probability
-of Live</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QSlider" name="pSlider">
-              <property name="minimumSize">
-               <size>
-                <width>60</width>
-                <height>0</height>
-               </size>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="pDisplay">
-              <property name="text">
-               <string>0.3</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="horizontalSpacer">
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>40</width>
-                <height>20</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QPushButton" name="RandomInit">
-              <property name="text">
-               <string>Random Init</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_6">
-            <item>
-             <widget class="QLabel" name="label_2">
-              <property name="text">
-               <string>Interval</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <spacer name="verticalSpacer_2">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>40</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item>
-             <widget class="QSlider" name="timerSlider">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QLabel" name="timerLabel">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>ms</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-          <item>
-           <layout class="QHBoxLayout" name="horizontalLayout_4" stretch="0,0,0">
-            <item>
-             <widget class="QPushButton" name="autoEvolveBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Auto Evolve</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="pauseBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Pause</string>
-              </property>
-             </widget>
-            </item>
-            <item>
-             <widget class="QPushButton" name="nextStepBtn">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="text">
-               <string>Next Step</string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout">
-          <item>
-           <widget class="QLabel" name="label">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>Generations : </string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QLabel" name="generationsLabel">
-            <property name="sizePolicy">
-             <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
-            </property>
-            <property name="text">
-             <string>0</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
-        <item>
-         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="2,2">
+         <layout class="QVBoxLayout" name="verticalLayout_7">
           <item>
            <widget class="QGroupBox" name="groupBox">
             <property name="title">
-             <string>GroupBox</string>
+             <string>Setting</string>
             </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QGroupBox" name="groupBox_2">
-            <property name="title">
-             <string>GroupBox</string>
-            </property>
-            <widget class="QPushButton" name="pushButton_2">
+            <widget class="QComboBox" name="gameBox">
              <property name="geometry">
               <rect>
-               <x>30</x>
+               <x>60</x>
+               <y>20</y>
+               <width>151</width>
+               <height>41</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <item>
+              <property name="text">
+               <string>Conway</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>HighLife</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>PseudoLife</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>2x2 Automata</string>
+              </property>
+             </item>
+            </widget>
+            <widget class="QLabel" name="label_5">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>58</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Game</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label_3">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
                <y>60</y>
-               <width>100</width>
+               <width>26</width>
+               <height>26</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Grid</string>
+             </property>
+            </widget>
+            <widget class="QComboBox" name="gridSizeBox">
+             <property name="geometry">
+              <rect>
+               <x>60</x>
+               <y>60</y>
+               <width>151</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="font">
+              <font>
+               <family>.AppleSystemUIFont</family>
+              </font>
+             </property>
+             <item>
+              <property name="text">
+               <string>256 X 256</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
+               <string>20 X 20 Auto Expand</string>
+              </property>
+             </item>
+            </widget>
+            <widget class="QPushButton" name="ClearBtn">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>160</y>
+               <width>91</width>
                <height>32</height>
               </rect>
              </property>
              <property name="text">
-              <string>PushButton</string>
+              <string>Clear</string>
              </property>
             </widget>
-            <widget class="QCheckBox" name="checkBox">
+            <widget class="QLabel" name="label_4">
              <property name="geometry">
               <rect>
-               <x>190</x>
-               <y>90</y>
-               <width>85</width>
-               <height>20</height>
+               <x>10</x>
+               <y>110</y>
+               <width>64</width>
+               <height>32</height>
               </rect>
              </property>
              <property name="text">
-              <string>CheckBox</string>
+              <string>Probability
+of Live</string>
+             </property>
+            </widget>
+            <widget class="QSlider" name="pSlider">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>110</y>
+               <width>91</width>
+               <height>25</height>
+              </rect>
+             </property>
+             <property name="minimumSize">
+              <size>
+               <width>60</width>
+               <height>0</height>
+              </size>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+            <widget class="QLabel" name="pDisplay">
+             <property name="geometry">
+              <rect>
+               <x>190</x>
+               <y>110</y>
+               <width>20</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>0.3</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="RandomInit">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>160</y>
+               <width>101</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Random Init</string>
+             </property>
+            </widget>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_4" stretch="0">
+          <item>
+           <layout class="QVBoxLayout" name="verticalLayout">
+            <item>
+             <widget class="QGroupBox" name="groupBox_3">
+              <property name="title">
+               <string>Control</string>
+              </property>
+              <widget class="QPushButton" name="autoEvolveBtn">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>60</y>
+                 <width>81</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Auto Evolve</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="pauseBtn">
+               <property name="geometry">
+                <rect>
+                 <x>100</x>
+                 <y>60</y>
+                 <width>51</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Pause</string>
+               </property>
+              </widget>
+              <widget class="QPushButton" name="nextStepBtn">
+               <property name="geometry">
+                <rect>
+                 <x>160</x>
+                 <y>60</y>
+                 <width>71</width>
+                 <height>32</height>
+                </rect>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>Next Step</string>
+               </property>
+              </widget>
+              <widget class="QLabel" name="label_2">
+               <property name="geometry">
+                <rect>
+                 <x>10</x>
+                 <y>30</y>
+                 <width>45</width>
+                 <height>25</height>
+                </rect>
+               </property>
+               <property name="text">
+                <string>Interval</string>
+               </property>
+              </widget>
+              <widget class="QSlider" name="timerSlider">
+               <property name="geometry">
+                <rect>
+                 <x>70</x>
+                 <y>30</y>
+                 <width>91</width>
+                 <height>25</height>
+                </rect>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="orientation">
+                <enum>Qt::Horizontal</enum>
+               </property>
+              </widget>
+              <widget class="QLabel" name="timerLabel">
+               <property name="geometry">
+                <rect>
+                 <x>180</x>
+                 <y>30</y>
+                 <width>41</width>
+                 <height>16</height>
+                </rect>
+               </property>
+               <property name="sizePolicy">
+                <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+                 <horstretch>0</horstretch>
+                 <verstretch>0</verstretch>
+                </sizepolicy>
+               </property>
+               <property name="text">
+                <string>ms</string>
+               </property>
+              </widget>
+             </widget>
+            </item>
+           </layout>
+          </item>
+         </layout>
+        </item>
+        <item>
+         <layout class="QVBoxLayout" name="verticalLayout_3">
+          <item>
+           <widget class="QGroupBox" name="groupBox_2">
+            <property name="title">
+             <string>Output</string>
+            </property>
+            <widget class="QLabel" name="generationsLabel">
+             <property name="geometry">
+              <rect>
+               <x>110</x>
+               <y>30</y>
+               <width>16</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>0</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="label">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>30</y>
+               <width>81</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Generations : </string>
              </property>
             </widget>
            </widget>
