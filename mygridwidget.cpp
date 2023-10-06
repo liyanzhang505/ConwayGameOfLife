@@ -3,15 +3,21 @@
 #include <iostream>
 #include <QPalette>
 #include "BirthSurviveRule.h"
-#include "GridSizeOps.h"
-#include "GameType.h"
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+#include <QFileInfo>
+#include <QDate>
+#include "CommonDef.h"
 
-MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_256_SIZE), rows(GRID_256_SIZE)
+MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_SIZE_256), rows(GRID_SIZE_256)
 {
+    initOutputFile();
     initGame();
     initBackgroud();
     initCells();
     initTimer();
+//    testCSV();
 }
 
 
@@ -19,6 +25,46 @@ MyGridWidget::~MyGridWidget()
 {
     destory();
 }
+
+
+void MyGridWidget::testCSV()
+{
+
+//    // 定义要写入CSV的数据
+//    QStringList headers = {"Name", "Age", "City"};
+//    QList<QStringList> data = {
+//        {"Alice", "28", "New York"},
+//        {"Bob", "22", "Los Angeles"},
+//        {"Charlie", "30", "Chicago"}
+//    };
+
+//    // 创建或打开一个文件
+//    QFile file("output.csv");
+
+//    if (!file.open(QIODevice::WriteOnly)) {
+//        qDebug() << "Could not open file for writing!";
+//        return;
+//    }
+
+//    QFileInfo fileInfo(file);
+//    QString absolutePath = fileInfo.absoluteFilePath();
+
+//    qDebug() << "Absolute path:" << absolutePath;
+
+//    QTextStream stream(&file);
+
+//    // 写入header
+//    stream << headers.join(",") << "\n";
+
+//    // 写入数据
+//    for (const QStringList &row : data) {
+//        stream << row.join(",") << "\n";
+//    }
+
+//    file.close();
+//    qDebug() << "CSV file written!";
+}
+
 
 void MyGridWidget::destory()
 {
@@ -36,6 +82,42 @@ void MyGridWidget::initBackgroud()
     this->show();
 }
 
+void MyGridWidget::recordGameData(const QString& gameName,
+                                  qreal p0,
+                                  int evolutionCount,
+                                  qreal p) {
+    if (file->open(QIODevice::WriteOnly | QIODevice::Append)) {
+        QTextStream output(file);
+        output << gameName << p0 << evolutionCount << p << "\n";
+        file->close();
+    } else {
+        qWarning("Can not open record file....");
+    }
+}
+
+
+void MyGridWidget::initOutputFile()
+{
+    QString currentDate = QDate::currentDate().toString("yyyy_MM_dd");
+    QString fileName = currentDate + "_statistics.csv";
+    file = new QFile(fileName);
+    QFileInfo fileInfo(*file);
+    QString absolutePath = fileInfo.absoluteFilePath();
+    if (fileInfo.size() == 0) {
+        QStringList headers = {"GameName", "p0", "time", "p"};
+        qDebug() << "Creating new statistics to file: " + absolutePath;
+        if (file->open(QIODevice::WriteOnly)) {
+            QTextStream output(file);
+            output << headers.join(",") << "\n";
+            file->close();
+        } else {
+            qWarning("Can not open record file....");
+        }
+
+    } else {
+        qDebug() << "Output statistics to file: " + absolutePath;
+    }
+}
 
 void MyGridWidget::initGame()
 {
@@ -43,6 +125,8 @@ void MyGridWidget::initGame()
     generations = 0;
     BirthSurviveRule* bsRule = new BirthSurviveRule({3}, {2, 3});
     game = new ConwayGame(rows, cols, bsRule);
+    gameName =GAME_NAME_CONWAYGAME;
+
 }
 
 void MyGridWidget::clearDisplay()
@@ -58,23 +142,23 @@ void MyGridWidget::changeGame(int index) {
     delete game;
     BirthSurviveRule* bsRule = NULL;
     switch(index) {
-        case CONWAYGAME:
+        case GAME_INDEX_CONWAYGAME:
             bsRule = new BirthSurviveRule({3}, {2, 3});
             game = new ConwayGame(rows, cols, bsRule);
             break;
-        case HIGHLIFE:
+        case GAME_INDEX_HIGHLIFE:
             bsRule = new BirthSurviveRule({3, 6}, {2, 3});
             game = new ConwayGame(rows, cols, bsRule);
             break;
-        case PSEUDOLIFE:
+        case GAME_INDEX_PSEUDOLIFE:
             bsRule = new BirthSurviveRule({3, 5, 7}, {2, 3, 8});
             game = new ConwayGame(rows, cols, bsRule);
             break;
-        case TWOBYTWO:
+        case GAME_INDEX_2X2:
             bsRule = new BirthSurviveRule({3, 6}, {1, 2, 5});
             game = new ConwayGame(rows, cols, bsRule);
             break;
-        case MOVE:
+        case GAME_INDEX_MOVE:
             bsRule = new BirthSurviveRule({3, 6, 8}, {2, 4, 5});
             game = new ConwayGame(rows, cols, bsRule);
             break;
@@ -92,12 +176,12 @@ void MyGridWidget::changeGridSize(int index)
     destroyCells();
 
     qDebug() << "grid index:" << index;
-    if (GRID_256_INDEX == index) {
-        rows = GRID_256_SIZE;
-        cols = GRID_256_SIZE;
-    } else if (GRID_20_INDEX == index) {
-        rows = GRID_20_SIZE;
-        cols = GRID_20_SIZE;
+    if (GRID_INDEX_256 == index) {
+        rows = GRID_SIZE_256;
+        cols = GRID_SIZE_256;
+    } else if (GRID_INDEX_20 == index) {
+        rows = GRID_SIZE_20;
+        cols = GRID_SIZE_20;
     }
     generations = 0;
     expandCount = 0;
@@ -172,7 +256,7 @@ void MyGridWidget::UpdateCellStates()
         comeBound += pCells[(rows -1) * cols + col];
     }
 
-    if (rows != GRID_256_SIZE && comeBound > 0) {
+    if (rows != GRID_SIZE_256 && comeBound > 0) {
         expandCount += 1;
         autoExpandGrid();
     }
@@ -215,7 +299,7 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
     qreal lineWidth = 0;
     qreal alpha = 0;
 
-    if (rows != GRID_256_SIZE) {
+    if (rows != GRID_SIZE_256) {
         lineWidth = std::max(0.0, 1 - expandCount* 0.2);
         alpha = std::max(0.0, 0.4 - expandCount * 0.1);
         std::cout << "alpha: " << alpha << "lineWidth: " << lineWidth << std::endl;
