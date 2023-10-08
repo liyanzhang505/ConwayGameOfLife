@@ -30,6 +30,8 @@ private slots:
 
     void on_gameBox_currentIndexChanged(int index);
 
+    void on_EnableRecordCheckBox_stateChanged(int arg1);
+
 public slots:
     void onGenerationChanged(int value);
 private:

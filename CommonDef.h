@@ -9,7 +9,7 @@
 
 
 #define GAME_NAME_CONWAYGAME "Conway"
-#define GAME_NAME_HIGHLIFE "HighLife
+#define GAME_NAME_HIGHLIFE "HighLife"
 #define GAME_NAME_PSEUDOLIFE "PseudoLife"
 #define GAME_NAME_2X2 "2x2"
 #define GAME_NAME_MOVE "move"

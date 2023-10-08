@@ -15,7 +15,6 @@ public:
     MyGridWidget();
     explicit MyGridWidget(QWidget* parent = nullptr);
     ~MyGridWidget();
-    void testCSV();
 
     void startEvolve();
     void stopTimer();
@@ -26,6 +25,8 @@ public:
     void clearDisplay();
     void changeGridSize(int index);
     void changeGame(int index);
+    void changeRecordState(int state);
+    void setMaxGenerations(int generations);
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
@@ -44,6 +45,8 @@ private:
     QFile* file;
     QString gameName;
     qreal p0;
+    int maxGenerations;
+    bool enableRecordStatistics;
     void autoExpandGrid();
     void initCells();
     void destroyCells();
@@ -52,10 +55,11 @@ private:
     void initTimer();
     void initBackgroud();
     void initGame();
-    void initOutputFile();
+    void initRecordStatisticsFile();
+    qreal calculateSurviveRate();
     qreal probabilityOfLive;
     void destory();
-    void recordGameData(const QString &gameName, qreal p0, int evolutionCount, qreal p);
+    void recordGameData(const QString &gameName, int gridSize, qreal p0, int evolutionCount, qreal survivePercentage);
 };
 
 #endif // MYGRIDWIDGET_H

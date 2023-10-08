@@ -8,9 +8,14 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->gridLayout->addWidget(grid);
-//    ui->widgetLayout->setStretchFactor(ui->gridLayout, 7);
-//    ui->widgetLayout->setStretchFactor(ui->pannelLayout, 3);
 
+    grid->changeRecordState(Qt::Unchecked);
+    grid->setMaxGenerations(512);
+    ui->maxGenerationsEdit->setText(QString::number(512));
+    QIntValidator *validator = new QIntValidator(0, 512, this);
+    ui->maxGenerationsEdit->setValidator(validator);
+    ui->maxGenerationsEdit->setDisabled(true);
+    ui->maxGenerationsSetBtn->setDisabled(true);
 
     ui->timerSlider->setRange(0, 2000);
     ui->timerSlider->setValue(interval);
@@ -92,5 +97,18 @@ void MainWindow::on_gridSizeBox_currentIndexChanged(int index)
 void MainWindow::on_gameBox_currentIndexChanged(int index)
 {
     grid->changeGame(index);
+}
+
+
+void MainWindow::on_EnableRecordCheckBox_stateChanged(int state)
+{
+    if (state == Qt::Checked) {
+        ui->maxGenerationsEdit->setDisabled(false);
+        ui->maxGenerationsSetBtn->setDisabled(false);
+    } else {
+        ui->maxGenerationsEdit->setDisabled(true);
+        ui->maxGenerationsSetBtn->setDisabled(true);
+    }
+    grid->changeRecordState(state);
 }
 
