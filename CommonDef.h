@@ -6,6 +6,7 @@
 #define GAME_INDEX_PSEUDOLIFE 2
 #define GAME_INDEX_2X2 3
 #define GAME_INDEX_MOVE 4
+#define GAME_INDEX_B2S2 5
 
 
 #define GAME_NAME_CONWAYGAME "Conway"
@@ -13,6 +14,7 @@
 #define GAME_NAME_PSEUDOLIFE "PseudoLife"
 #define GAME_NAME_2X2 "2x2"
 #define GAME_NAME_MOVE "move"
+#define GAME_NAME_B2S2 "B2/S2"
 
 
 #define GRID_INDEX_256 0

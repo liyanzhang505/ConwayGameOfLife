@@ -119,12 +119,12 @@ void MyGridWidget::clearDisplay()
     timer->stop();
     std::memset(pCells, 0, rows * cols * sizeof(int));
     generations = 0;
-    probabilityOfLive = 0;
     emit generationChanged(generations);
     update();
 }
 
 void MyGridWidget::changeGame(int index) {
+    qDebug()<<"change game index : " << index;
     delete game;
     BirthSurviveRule* bsRule = NULL;
     switch(index) {
@@ -152,6 +152,10 @@ void MyGridWidget::changeGame(int index) {
             bsRule = new BirthSurviveRule({3, 6, 8}, {2, 4, 5});
             game = new ConwayGame(rows, cols, bsRule);
             gameName = GAME_NAME_MOVE;
+        case GAME_INDEX_B2S2:
+            bsRule = new BirthSurviveRule({2}, {2});
+            game = new ConwayGame(rows, cols, bsRule);
+            gameName = GAME_NAME_B2S2;
             break;
         default:
             bsRule = new BirthSurviveRule({3}, {2, 3});
@@ -230,6 +234,7 @@ void MyGridWidget::setProbabilityOfLive(qreal probabilityOfLive)
 
 void MyGridWidget::randomInitGrid()
 {
+    qDebug() << "probabilityOfLive" << probabilityOfLive;
     clearDisplay();
     srand(time(0));
     for(int i = 0; i < rows; ++i) {
@@ -241,7 +246,13 @@ void MyGridWidget::randomInitGrid()
             }
         }
     }
+
     update();
+    if (enableRecordStatistics) {
+        qreal surviveRate = calculateSurviveRate();
+        qDebug() << "init surviveRate: " << surviveRate;
+        recordGameData(gameName, rows, probabilityOfLive, generations, surviveRate);
+    }
 }
 
 
