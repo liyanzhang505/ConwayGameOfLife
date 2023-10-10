@@ -39,7 +39,6 @@ void ConwayGame::reset(int rows, int cols)
 ConwayGame::~ConwayGame()
 {
     delete[] pBuff;
-    delete bsRule;
 }
 
 bool ConwayGame::isAlive(int *grid, int row, int col)

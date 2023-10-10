@@ -41,6 +41,7 @@ private:
     int rows;
     int expandCount;
     int generations;
+    BirthSurviveRule* bsRule;
     GameBase* game;
     QFile* file;
     QString gameName;

@@ -28,6 +28,7 @@ MyGridWidget::~MyGridWidget()
 
 void MyGridWidget::destory()
 {
+    delete bsRule;
     delete game;
     delete timer;
     destroyCells();
@@ -109,9 +110,13 @@ void MyGridWidget::initGame()
 {
     expandCount = 0;
     generations = 0;
-    BirthSurviveRule* bsRule = new BirthSurviveRule({3}, {2, 3});
-    game = new ConwayGame(rows, cols, bsRule);
-    gameName =GAME_NAME_CONWAYGAME;
+    if (bsRule == NULL) {
+        bsRule = new BirthSurviveRule({3}, {2, 3});
+        game = new ConwayGame(rows, cols, bsRule);
+        gameName =GAME_NAME_CONWAYGAME;
+    } else {
+        game = new ConwayGame(rows, cols, bsRule);
+    }
 }
 
 void MyGridWidget::clearDisplay()
@@ -125,8 +130,8 @@ void MyGridWidget::clearDisplay()
 
 void MyGridWidget::changeGame(int index) {
     qDebug()<<"change game index : " << index;
+    delete bsRule;
     delete game;
-    BirthSurviveRule* bsRule = NULL;
     switch(index) {
         case GAME_INDEX_CONWAYGAME:
             bsRule = new BirthSurviveRule({3}, {2, 3});
@@ -152,6 +157,7 @@ void MyGridWidget::changeGame(int index) {
             bsRule = new BirthSurviveRule({3, 6, 8}, {2, 4, 5});
             game = new ConwayGame(rows, cols, bsRule);
             gameName = GAME_NAME_MOVE;
+            break;
         case GAME_INDEX_B2S2:
             bsRule = new BirthSurviveRule({2}, {2});
             game = new ConwayGame(rows, cols, bsRule);
@@ -162,8 +168,8 @@ void MyGridWidget::changeGame(int index) {
             game = new ConwayGame(rows, cols, bsRule);
             gameName = GAME_NAME_CONWAYGAME;
     }
-        qDebug() << "Change to game: " << gameName;
-       clearDisplay();
+    qDebug() << "Change to game: " << gameName;
+    clearDisplay();
 }
 
 void MyGridWidget::changeRecordState(int state)

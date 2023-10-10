@@ -91,6 +91,11 @@
                <string>move</string>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>B2/S2</string>
+              </property>
+             </item>
             </widget>
             <widget class="QLabel" name="label_5">
              <property name="geometry">
