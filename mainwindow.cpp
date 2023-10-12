@@ -28,6 +28,10 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pDisplay->setText(QString::number(probabilityOfLive));
     grid->setProbabilityOfLive(probabilityOfLive);
 
+    qDebug() <<"window width:"  << width() << "height:" << height();
+
+
+
 }
 
 
@@ -110,5 +114,17 @@ void MainWindow::on_EnableRecordCheckBox_stateChanged(int state)
         ui->maxGenerationsSetBtn->setDisabled(true);
     }
     grid->changeRecordState(state);
+}
+
+
+void MainWindow::on_saveFileBtn_clicked()
+{
+    grid->SaveFile();
+}
+
+
+void MainWindow::on_openFileBtn_clicked()
+{
+    grid->OpenFile();
 }
 

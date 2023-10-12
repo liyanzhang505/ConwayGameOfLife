@@ -32,6 +32,10 @@ private slots:
 
     void on_EnableRecordCheckBox_stateChanged(int arg1);
 
+    void on_saveFileBtn_clicked();
+
+    void on_openFileBtn_clicked();
+
 public slots:
     void onGenerationChanged(int value);
 private:

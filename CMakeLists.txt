@@ -24,6 +24,8 @@ set(PROJECT_SOURCES
         conwaygame.cpp
         birthSurviveRule.h
         CommonDef.h
+        rletools.h
+        rletools.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

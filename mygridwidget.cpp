@@ -8,7 +8,10 @@
 #include <QDebug>
 #include <QFileInfo>
 #include <QDate>
+#include <QFileDialog>
+#include <QMessageBox>
 #include "CommonDef.h"
+#include "rletools.h"
 
 MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_SIZE_256), rows(GRID_SIZE_256), probabilityOfLive(0)
 {
@@ -91,6 +94,59 @@ void MyGridWidget::setMaxGenerations(int generations)
     maxGenerations = generations;
 }
 
+void MyGridWidget::SaveFile()
+{
+    QString fileName =  QFileDialog::getSaveFileName(this,"打开文件","","All(*.*);;Text files (*.txt, *.rle)");
+    if(fileName.isNull())
+    {
+        QMessageBox::information(this,"Warning","Havn't input the filename.");
+        return;
+    }
+
+    qDebug() << "Save file to :" << fileName;
+
+    RLETools::saveToRLE(fileName, pCells, rows, cols, game->getBirthSetting(), game->getSurviveSetting());
+}
+
+void MyGridWidget::OpenFile()
+{
+    int * tmpPcells = NULL;
+    int tmpRows = 0;
+    int tmpCols = 0;
+    std::vector<int> birthSetting;
+    std::vector<int> surviveSetting;
+//    QString fFileName = "/Users/yanzhangli/Qtproject/rle/glider1.rle";
+
+
+    QString fileName = QFileDialog::getOpenFileName(this, "Open existing rle file","","RLE files(*.rle)");
+    if(fileName.isNull())
+    {
+        QMessageBox::information(this,"Warning","Havn't select a file.");
+        return;
+    }
+
+    if (RLETools::loadFromRLE(fileName,tmpPcells, tmpRows, tmpCols, birthSetting, surviveSetting) != true) {
+        QMessageBox::information(this,"Error","Load rle file error!");
+        return;
+    }
+
+    timer->stop();
+    delete game;
+    destroyCells();
+
+    pCells = tmpPcells;
+    rows = tmpRows;
+    cols = tmpCols;
+    generations = 0;
+    expandCount = 0;
+    qDebug() << "load game rows:" << rows << "cols:" << cols;
+    emit generationChanged(generations);
+    bsRule = new BirthSurviveRule(birthSetting, surviveSetting);
+    game = new ConwayGame(rows, cols, bsRule);
+    gameName = createGameNameByBSRule(birthSetting, surviveSetting);
+    update();
+}
+
 qreal MyGridWidget::calculateSurviveRate()
 {
     int sum = 0;
@@ -136,40 +192,50 @@ void MyGridWidget::changeGame(int index) {
         case GAME_INDEX_CONWAYGAME:
             bsRule = new BirthSurviveRule({3}, {2, 3});
             game = new ConwayGame(rows, cols, bsRule);
-            gameName = GAME_NAME_CONWAYGAME;
             break;
         case GAME_INDEX_HIGHLIFE:
             bsRule = new BirthSurviveRule({3, 6}, {2, 3});
             game = new ConwayGame(rows, cols, bsRule);
-            gameName = GAME_NAME_HIGHLIFE;
             break;
         case GAME_INDEX_PSEUDOLIFE:
             bsRule = new BirthSurviveRule({3, 5, 7}, {2, 3, 8});
             game = new ConwayGame(rows, cols, bsRule);
-            gameName = GAME_NAME_PSEUDOLIFE;
             break;
         case GAME_INDEX_2X2:
             bsRule = new BirthSurviveRule({3, 6}, {1, 2, 5});
             game = new ConwayGame(rows, cols, bsRule);
-            gameName = GAME_NAME_2X2;
             break;
         case GAME_INDEX_MOVE:
             bsRule = new BirthSurviveRule({3, 6, 8}, {2, 4, 5});
             game = new ConwayGame(rows, cols, bsRule);
-            gameName = GAME_NAME_MOVE;
             break;
         case GAME_INDEX_B2S2:
             bsRule = new BirthSurviveRule({2}, {2});
             game = new ConwayGame(rows, cols, bsRule);
-            gameName = GAME_NAME_B2S2;
             break;
         default:
             bsRule = new BirthSurviveRule({3}, {2, 3});
             game = new ConwayGame(rows, cols, bsRule);
-            gameName = GAME_NAME_CONWAYGAME;
     }
+
+    gameName = createGameNameByBSRule(bsRule->getBirthSetting(), bsRule->getSurviveSetting());
     qDebug() << "Change to game: " << gameName;
     clearDisplay();
+}
+
+QString MyGridWidget::createGameNameByBSRule(const std::vector<int> &birthRules, const std::vector<int> &survivalRules) {
+    QString name = "B";
+    for (int rule : bsRule->getBirthSetting()) {
+        name += QString::number(rule);
+    }
+
+    name += "/S";
+
+    for (int rule : bsRule->getSurviveSetting()) {
+        name += QString::number(rule);
+    }
+
+    return name;
 }
 
 void MyGridWidget::changeRecordState(int state)
@@ -275,7 +341,7 @@ void MyGridWidget::UpdateCellStates()
         comeBound += pCells[(rows -1) * cols + col];
     }
 
-    if (rows != GRID_SIZE_256 && comeBound > 0) {
+    if ((rows < GRID_SIZE_256) && comeBound > 0) {
         expandCount += 1;
         autoExpandGrid();
     }
@@ -326,20 +392,35 @@ double MyGridWidget::calculateCellHeight()
 void MyGridWidget::paintEvent(QPaintEvent* event)
 {
     QPainter painter(this);
-    qreal lineWidth = 0;
-    qreal alpha = 0;
+    qreal lineWidth = 0.0;
+    qreal alpha = 0.0;
 
-    if (rows != GRID_SIZE_256) {
-        lineWidth = std::max(0.0, 1 - expandCount* 0.2);
-        alpha = std::max(0.0, 0.4 - expandCount * 0.1);
-        std::cout << "alpha: " << alpha << "lineWidth: " << lineWidth << std::endl;
+    if (rows > 160) {
+        qreal lineWidth = 0.0;
+        qreal alpha = 0.0;
+    } else if (rows > 80 && rows <= 160) {
+        alpha = 0.1;
+        lineWidth = 0.4;
+    } else if (rows > 40 && rows <= 80) {
+        alpha = 0.2;
+        lineWidth = 0.6;
+    } else if (rows > 20 && rows <= 40) {
+        alpha = 0.3;
+        lineWidth = 0.8;
+    } else {
+        alpha = 0.4;
+        lineWidth = 1.0;
     }
+
+
+
+    std::cout << "row:" << rows << " alpha: " << alpha << " lineWidth: " << lineWidth << std::endl;
 
     // Line setting, set line to back with width of 1.
     QColor penColor = QColor(Qt::black);
     penColor.setAlphaF(alpha);
     QPen pen(penColor);
-    std::cout << "alpha: " << alpha << "lineWidth: " << lineWidth << std::endl;
+
     pen.setWidthF(lineWidth);
     painter.setPen(pen);
 
@@ -356,8 +437,6 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
     {
         painter.drawLine(0, k, width(), k);
     }
-
-    std::cout << "rows:" << rows << "height:"<< cols;
 
     // Paint alive cell
     for (int row = 0; row < rows; row++)

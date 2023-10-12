@@ -27,6 +27,8 @@ public:
     void changeGame(int index);
     void changeRecordState(int state);
     void setMaxGenerations(int generations);
+    void SaveFile();
+    void OpenFile();
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
@@ -61,6 +63,7 @@ private:
     qreal probabilityOfLive;
     void destory();
     void recordGameData(const QString &gameName, int gridSize, qreal p0, int evolutionCount, qreal survivePercentage);
+    QString createGameNameByBSRule(const std::vector<int> &birthRules, const std::vector<int> &survivalRules);
 };
 
 #endif // MYGRIDWIDGET_H
