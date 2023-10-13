@@ -352,12 +352,22 @@ of Live</string>
                 <rect>
                  <x>10</x>
                  <y>90</y>
-                 <width>100</width>
-                 <height>32</height>
+                 <width>101</width>
+                 <height>31</height>
                 </rect>
+               </property>
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <pointsize>12</pointsize>
+                </font>
                </property>
                <property name="text">
                 <string>Save To File</string>
+               </property>
+               <property name="icon">
+                <iconset resource="img.qrc">
+                 <normaloff>:/file/save/img/save.png</normaloff>:/file/save/img/save.png</iconset>
                </property>
               </widget>
               <widget class="QPushButton" name="openFileBtn">
@@ -365,12 +375,25 @@ of Live</string>
                 <rect>
                  <x>120</x>
                  <y>90</y>
-                 <width>101</width>
+                 <width>111</width>
                  <height>32</height>
                 </rect>
                </property>
+               <property name="font">
+                <font>
+                 <family>Arial</family>
+                 <pointsize>12</pointsize>
+                </font>
+               </property>
                <property name="text">
                 <string>Open From File</string>
+               </property>
+               <property name="icon">
+                <iconset resource="img.qrc">
+                 <normaloff>:/file/open/img/open.png</normaloff>:/file/open/img/open.png</iconset>
+               </property>
+               <property name="autoExclusive">
+                <bool>false</bool>
                </property>
               </widget>
              </widget>
@@ -503,6 +526,8 @@ of Live</string>
    </layout>
   </widget>
  </widget>
- <resources/>
+ <resources>
+  <include location="img.qrc"/>
+ </resources>
  <connections/>
 </ui>

@@ -26,6 +26,7 @@ set(PROJECT_SOURCES
         CommonDef.h
         rletools.h
         rletools.cpp
+        img.qrc
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
