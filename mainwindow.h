@@ -42,6 +42,8 @@ public slots:
     void onGenerationChanged(int value);
     void onDensityChanged(qreal value);
     void onActivityChanged(qreal value);
+    void onGridChanged(int rows, int cols);
+    void onGameRuleChanged(QString ruleStr);
 private:
     Ui::MainWindow *ui;
     MyGridWidget* grid;

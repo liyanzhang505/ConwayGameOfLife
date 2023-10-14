@@ -3,7 +3,6 @@
 #include "gameBase.h"
 
 
-
 class ConwayGame: public GameBase
 {
 
@@ -11,6 +10,8 @@ public:
     ConwayGame(int rows, int cols, BirthSurviveRule* bsRule = new BirthSurviveRule({3}, {2, 3}));
     void evolve(int* grid) override;
     void reset(int rows, int cols) override;
+    void fullyAsyncEvolve(int* grid) override;
+    void partialSyncEvolve(int* grid, qreal percent) override;
     ~ConwayGame();
 private:
     void initBuff();

@@ -13,6 +13,7 @@
 #include "CommonDef.h"
 #include "rletools.h"
 
+
 MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_SIZE_256), rows(GRID_SIZE_256), probabilityOfLive(0)
 {
     initRecordStatisticsFile();
@@ -366,7 +367,9 @@ void MyGridWidget::UpdateCellStates()
     int* pCellsPrev = new int[rows * cols];
     memcpy(pCellsPrev, pCells, rows * cols * sizeof(int));
 
-    game->evolve(pCells);
+//    game->evolve(pCells);
+//    game->partialSyncEvolve(pCells, 1.0);
+    game->fullyAsyncEvolve(pCells);
 
     generations += 1;
     density = calculateDensity();

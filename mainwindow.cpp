@@ -4,7 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), grid(new MyGridWidget(this)),
-    interval(200), probabilityOfLive(0.3)
+    interval(200), probabilityOfLive(0.5)
 {
     ui->setupUi(this);
     ui->gridLayout->addWidget(grid);
@@ -26,15 +26,16 @@ MainWindow::MainWindow(QWidget *parent)
     connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
 
 
+//    ui->currentGameRuleLabel->setText("B2/S23");
+//    ui->currentGridLabel->setText("256 X 256");
+
+
     ui->pSlider->setRange(0, 10);
     ui->pSlider->setValue(probabilityOfLive * 10);
     ui->pDisplay->setText(QString::number(probabilityOfLive));
     grid->setProbabilityOfLive(probabilityOfLive);
 
     qDebug() <<"window width:"  << width() << "height:" << height();
-
-
-
 }
 
 
@@ -81,6 +82,16 @@ void MainWindow::onDensityChanged(qreal value)
 void MainWindow::onActivityChanged(qreal value)
 {
     ui->activityLabel->setText(QString::number(value));
+}
+
+void MainWindow::onGridChanged(int rows, int cols)
+{
+
+}
+
+void MainWindow::onGameRuleChanged(QString ruleStr)
+{
+
 }
 
 void MainWindow::on_pSlider_valueChanged(int value)
