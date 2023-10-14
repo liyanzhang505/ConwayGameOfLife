@@ -39,6 +39,8 @@ signals:
     void generationChanged(int value);
     void densityChanged(qreal value);
     void activityChanged(qreal value);
+    void gridSizeChanged(int rows, int cols);
+    void gameRuleChanged(QString ruleStr);
 private:
     QTimer* timer;
     int* pCells;

@@ -141,10 +141,13 @@ void MyGridWidget::OpenFile()
     generations = 0;
     expandCount = 0;
     qDebug() << "load game rows:" << rows << "cols:" << cols;
-    emit generationChanged(generations);
     bsRule = new BirthSurviveRule(birthSetting, surviveSetting);
     game = new ConwayGame(rows, cols, bsRule);
     gameName = createGameNameByBSRule(birthSetting, surviveSetting);
+
+    emit generationChanged(generations);
+    emit gridSizeChanged(rows, cols);
+    emit gameRuleChanged(gameName);
     update();
 }
 
@@ -173,6 +176,7 @@ void MyGridWidget::initGame()
         bsRule = new BirthSurviveRule({3}, {2, 3});
         game = new ConwayGame(rows, cols, bsRule);
         gameName =GAME_NAME_CONWAYGAME;
+        emit gameRuleChanged(gameName);
     } else {
         game = new ConwayGame(rows, cols, bsRule);
     }
@@ -227,6 +231,7 @@ void MyGridWidget::changeGame(int index) {
 
     gameName = createGameNameByBSRule(bsRule->getBirthSetting(), bsRule->getSurviveSetting());
     qDebug() << "Change to game: " << gameName;
+    emit gameRuleChanged(gameName);
     clearDisplay();
 }
 
@@ -280,6 +285,8 @@ void MyGridWidget::changeGridSize(int index)
     generations = 0;
     expandCount = 0;
     emit generationChanged(generations);
+    emit gridSizeChanged(rows, cols);
+
     initGame();
     initCells();
     update();
@@ -546,4 +553,6 @@ void MyGridWidget::autoExpandGrid()
     cols = cols2;
     delete[] tmp;
     game->reset(rows, cols);
+
+    emit gridSizeChanged(rows, cols);
 }

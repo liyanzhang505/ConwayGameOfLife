@@ -24,7 +24,8 @@ MainWindow::MainWindow(QWidget *parent)
     connect(grid,SIGNAL(generationChanged(int)), this, SLOT(onGenerationChanged(int)));
     connect(grid,SIGNAL(densityChanged(qreal)), this, SLOT(onDensityChanged(qreal)));
     connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
-
+    connect(grid, SIGNAL(gridSizeChanged(int,int)), this, SLOT(onGridChanged(int,int)));
+    connect(grid, SIGNAL(gameRuleChanged(QString)), this, SLOT(onGameRuleChanged(QString)));
 
 //    ui->currentGameRuleLabel->setText("B2/S23");
 //    ui->currentGridLabel->setText("256 X 256");
@@ -86,12 +87,12 @@ void MainWindow::onActivityChanged(qreal value)
 
 void MainWindow::onGridChanged(int rows, int cols)
 {
-
+    ui->currentGridLabel->setText(QString::number(rows) + " X " + QString::number(cols));
 }
 
 void MainWindow::onGameRuleChanged(QString ruleStr)
 {
-
+    ui->currentGameRuleLabel->setText(ruleStr);
 }
 
 void MainWindow::on_pSlider_valueChanged(int value)
