@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->gridLayout->addWidget(grid);
 
     grid->changeRecordState(Qt::Unchecked);
+    grid->changeAutoFitState(Qt::Unchecked);
     grid->setMaxGenerations(512);
     ui->maxGenerationsEdit->setText(QString::number(512));
     QIntValidator *validator = new QIntValidator(0, 512, this);
@@ -21,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->timerSlider->setValue(interval);
     ui->timerLabel->setText(QString::number(interval) + "ms");
     connect(grid,SIGNAL(generationChanged(int)), this, SLOT(onGenerationChanged(int)));
+    connect(grid,SIGNAL(densityChanged(qreal)), this, SLOT(onDensityChanged(qreal)));
+    connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
 
 
     ui->pSlider->setRange(0, 10);
@@ -70,6 +73,15 @@ void MainWindow::onGenerationChanged(int value)
     ui->generationsLabel->setText(QString::number(value));
 }
 
+void MainWindow::onDensityChanged(qreal value)
+{
+    ui->densityLabel->setText(QString::number(value));
+}
+
+void MainWindow::onActivityChanged(qreal value)
+{
+    ui->activityLabel->setText(QString::number(value));
+}
 
 void MainWindow::on_pSlider_valueChanged(int value)
 {
@@ -126,5 +138,11 @@ void MainWindow::on_saveFileBtn_clicked()
 void MainWindow::on_openFileBtn_clicked()
 {
     grid->OpenFile();
+}
+
+
+void MainWindow::on_autoFitCheckBox_stateChanged(int state)
+{
+    grid->changeAutoFitState(state);
 }
 

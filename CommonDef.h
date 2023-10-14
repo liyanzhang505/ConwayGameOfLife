@@ -23,6 +23,8 @@
 
 #define GRID_SIZE_256 256
 #define GRID_SIZE_20 20
+#define GRID_SIZE_AUTO_FIT_LIMIT 800
+
 
 
 

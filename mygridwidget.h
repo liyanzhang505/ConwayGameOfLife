@@ -26,6 +26,7 @@ public:
     void changeGridSize(int index);
     void changeGame(int index);
     void changeRecordState(int state);
+    void changeAutoFitState(int state);
     void setMaxGenerations(int generations);
     void SaveFile();
     void OpenFile();
@@ -35,14 +36,19 @@ protected:
 private slots:
     void UpdateCellStates();
 signals:
-    void generationChanged(int generations);
+    void generationChanged(int value);
+    void densityChanged(qreal value);
+    void activityChanged(qreal value);
 private:
     QTimer* timer;
     int* pCells;
+    int* pCellsPrev;
     int cols;
     int rows;
     int expandCount;
     int generations;
+    qreal density;
+    qreal activity;
     BirthSurviveRule* bsRule;
     GameBase* game;
     QFile* file;
@@ -50,6 +56,7 @@ private:
     qreal p0;
     int maxGenerations;
     bool enableRecordStatistics;
+    bool enableAutoFit;
     void autoExpandGrid();
     void initCells();
     void destroyCells();
@@ -64,6 +71,8 @@ private:
     void destory();
     void recordGameData(const QString &gameName, int gridSize, qreal p0, int evolutionCount, qreal survivePercentage);
     QString createGameNameByBSRule(const std::vector<int> &birthRules, const std::vector<int> &survivalRules);
+    qreal calculateDensity();
+    qreal calculateActivity(int *pCellsPrev);
 };
 
 #endif // MYGRIDWIDGET_H

@@ -166,6 +166,8 @@ void MyGridWidget::initGame()
 {
     expandCount = 0;
     generations = 0;
+    density = 0.0;
+    activity = 0.0;
     if (bsRule == NULL) {
         bsRule = new BirthSurviveRule({3}, {2, 3});
         game = new ConwayGame(rows, cols, bsRule);
@@ -180,7 +182,11 @@ void MyGridWidget::clearDisplay()
     timer->stop();
     std::memset(pCells, 0, rows * cols * sizeof(int));
     generations = 0;
+    density = 0;
+    activity = 0;
     emit generationChanged(generations);
+    emit densityChanged(density);
+    emit activityChanged(activity);
     update();
 }
 
@@ -244,6 +250,15 @@ void MyGridWidget::changeRecordState(int state)
         enableRecordStatistics = true;
     } else {
         enableRecordStatistics = false;
+    }
+}
+
+void MyGridWidget::changeAutoFitState(int state)
+{
+    if (state == Qt::Checked) {
+        enableAutoFit = true;
+    } else {
+        enableAutoFit = false;
     }
 }
 
@@ -331,36 +346,46 @@ void MyGridWidget::randomInitGrid()
 
 void MyGridWidget::UpdateCellStates()
 {
-    int comeBound = 0;
-    for (int row = 0; row < rows; row++) {
-        comeBound += pCells[row * cols];
-        comeBound += pCells[(row + 1) * cols -1];
-    }
-    for (int col = 1; col < cols - 1; col++) {
-        comeBound += pCells[col];
-        comeBound += pCells[(rows -1) * cols + col];
+    if (enableAutoFit && rows <= 256) {
+        int comeBound = 0;
+        for (int row = 0; row < rows; row++) {
+            comeBound += pCells[row * cols];
+            comeBound += pCells[(row + 1) * cols -1];
+        }
+        for (int col = 1; col < cols - 1; col++) {
+            comeBound += pCells[col];
+            comeBound += pCells[(rows -1) * cols + col];
+        }
+
+        if ((rows < GRID_SIZE_AUTO_FIT_LIMIT) && comeBound > 0) {
+            expandCount += 1;
+            autoExpandGrid();
+        }
     }
 
-    if ((rows < GRID_SIZE_256) && comeBound > 0) {
-        expandCount += 1;
-        autoExpandGrid();
-    }
+    int* pCellsPrev = new int[rows * cols];
+    memcpy(pCellsPrev, pCells, rows * cols * sizeof(int));
 
-    std::cout << "come bound:" << comeBound << std::endl;
-    std::cout << "here1_UpdateCellStates" << std::endl;
     game->evolve(pCells);
+
     generations += 1;
+    density = calculateDensity();
+    activity = calculateActivity(pCellsPrev);
+
+    emit densityChanged(density);
+    emit activityChanged(activity);
     emit generationChanged(generations);
+    delete[] pCellsPrev;
+
     update();
 
     if (enableRecordStatistics) {
+        if (generations >= maxGenerations) {
+            timer->stop();
+        }
         qreal surviveRate = calculateSurviveRate();
         qDebug() << "surviveRate: " << surviveRate;
         recordGameData(gameName, rows, probabilityOfLive, generations, surviveRate);
-    }
-
-    if (generations >= maxGenerations) {
-        timer->stop();
     }
 
 }
@@ -467,6 +492,34 @@ void MyGridWidget::mousePressEvent(QMouseEvent *e)
     pCells[row * cols + col] = last == 1 ? 0 : 1;
     update();
 }
+
+
+qreal MyGridWidget::calculateDensity() {
+    int totalCells = rows * cols;
+    int survivalCells = 0;
+
+    for(int i = 0; i < totalCells; ++i) {
+        if(pCells[i] == 1) {
+            survivalCells++;
+        }
+    }
+
+    return static_cast<double>(survivalCells) / totalCells;
+}
+
+qreal MyGridWidget::calculateActivity(int* pCellsPrev) {
+    int totalCells = rows * cols;
+    int changedCells = 0;
+
+    for(int i = 0; i < totalCells; ++i) {
+        if(pCells[i] != pCellsPrev[i]) {
+            changedCells++;
+        }
+    }
+
+    return static_cast<double>(changedCells) / totalCells;
+}
+
 
 void MyGridWidget::autoExpandGrid()
 {

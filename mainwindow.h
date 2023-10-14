@@ -36,8 +36,12 @@ private slots:
 
     void on_openFileBtn_clicked();
 
+    void on_autoFitCheckBox_stateChanged(int arg1);
+
 public slots:
     void onGenerationChanged(int value);
+    void onDensityChanged(qreal value);
+    void onActivityChanged(qreal value);
 private:
     Ui::MainWindow *ui;
     MyGridWidget* grid;
