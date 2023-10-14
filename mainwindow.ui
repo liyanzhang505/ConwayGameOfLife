@@ -43,7 +43,7 @@
        </layout>
       </item>
       <item>
-       <layout class="QVBoxLayout" name="pannelLayout" stretch="2,2,1,3">
+       <layout class="QVBoxLayout" name="pannelLayout" stretch="3,2,1,2">
         <property name="spacing">
          <number>10</number>
         </property>
@@ -102,6 +102,11 @@
                <string>B2/S2</string>
               </property>
              </item>
+             <item>
+              <property name="text">
+               <string>Customize</string>
+              </property>
+             </item>
             </widget>
             <widget class="QLabel" name="label_5">
              <property name="geometry">
@@ -115,44 +120,6 @@
              <property name="text">
               <string>Game</string>
              </property>
-            </widget>
-            <widget class="QLabel" name="label_3">
-             <property name="geometry">
-              <rect>
-               <x>10</x>
-               <y>60</y>
-               <width>26</width>
-               <height>26</height>
-              </rect>
-             </property>
-             <property name="text">
-              <string>Grid</string>
-             </property>
-            </widget>
-            <widget class="QComboBox" name="gridSizeBox">
-             <property name="geometry">
-              <rect>
-               <x>60</x>
-               <y>60</y>
-               <width>151</width>
-               <height>32</height>
-              </rect>
-             </property>
-             <property name="font">
-              <font>
-               <family>.AppleSystemUIFont</family>
-              </font>
-             </property>
-             <item>
-              <property name="text">
-               <string>256 X 256</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>20 X 20 Auto Expand</string>
-              </property>
-             </item>
             </widget>
             <widget class="QPushButton" name="ClearBtn">
              <property name="geometry">
@@ -171,7 +138,7 @@
              <property name="geometry">
               <rect>
                <x>10</x>
-               <y>110</y>
+               <y>120</y>
                <width>64</width>
                <height>32</height>
               </rect>
@@ -185,7 +152,7 @@ of Live</string>
              <property name="geometry">
               <rect>
                <x>80</x>
-               <y>110</y>
+               <y>120</y>
                <width>91</width>
                <height>25</height>
               </rect>
@@ -203,14 +170,14 @@ of Live</string>
             <widget class="QLabel" name="pDisplay">
              <property name="geometry">
               <rect>
-               <x>190</x>
-               <y>110</y>
-               <width>20</width>
-               <height>32</height>
+               <x>180</x>
+               <y>111</y>
+               <width>21</width>
+               <height>41</height>
               </rect>
              </property>
              <property name="text">
-              <string>0.3</string>
+              <string>0.5</string>
              </property>
             </widget>
             <widget class="QPushButton" name="RandomInit">
@@ -224,6 +191,107 @@ of Live</string>
              </property>
              <property name="text">
               <string>Random Init</string>
+             </property>
+            </widget>
+            <widget class="QSlider" name="rowSlider">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>80</y>
+               <width>101</width>
+               <height>25</height>
+              </rect>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+            <widget class="QSlider" name="collumSlider">
+             <property name="geometry">
+              <rect>
+               <x>120</x>
+               <y>80</y>
+               <width>111</width>
+               <height>25</height>
+              </rect>
+             </property>
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+            </widget>
+            <widget class="QLabel" name="rowDisplay">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>60</y>
+               <width>91</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Row: 256</string>
+             </property>
+            </widget>
+            <widget class="QLabel" name="collumDisplay">
+             <property name="geometry">
+              <rect>
+               <x>140</x>
+               <y>60</y>
+               <width>91</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Collum: 256</string>
+             </property>
+            </widget>
+            <widget class="QLineEdit" name="syncRateEdit">
+             <property name="geometry">
+              <rect>
+               <x>80</x>
+               <y>210</y>
+               <width>61</width>
+               <height>21</height>
+              </rect>
+             </property>
+            </widget>
+            <widget class="QLabel" name="syncRateLabel">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>210</y>
+               <width>71</width>
+               <height>16</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Sync Rate:</string>
+             </property>
+            </widget>
+            <widget class="QPushButton" name="setSyncRateBtn">
+             <property name="geometry">
+              <rect>
+               <x>150</x>
+               <y>200</y>
+               <width>51</width>
+               <height>32</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Set</string>
+             </property>
+            </widget>
+            <widget class="QCheckBox" name="fullyAsyncCheckBox">
+             <property name="geometry">
+              <rect>
+               <x>10</x>
+               <y>240</y>
+               <width>151</width>
+               <height>20</height>
+              </rect>
+             </property>
+             <property name="text">
+              <string>Fully async updating</string>
              </property>
             </widget>
            </widget>

@@ -1,6 +1,10 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "mygridwidget.h"
+#include <QRegularExpression>
+#include <QRegularExpressionValidator>
+#include <QInputDialog>
+#include <QMessageBox>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), grid(new MyGridWidget(this)),
@@ -13,19 +17,37 @@ MainWindow::MainWindow(QWidget *parent)
     grid->changeAutoFitState(Qt::Unchecked);
     grid->setMaxGenerations(512);
     ui->maxGenerationsEdit->setText(QString::number(512));
-    QIntValidator *validator = new QIntValidator(0, 512, this);
+    QIntValidator *validator = new QIntValidator(0, 100000000, this);
     ui->maxGenerationsEdit->setValidator(validator);
     ui->maxGenerationsEdit->setDisabled(true);
     ui->maxGenerationsSetBtn->setDisabled(true);
 
+    ui->syncRateEdit->setText("1.0");
+    QDoubleValidator *validator2 = new QDoubleValidator(0.000001, 1.0, 6, this);
+    validator2->setNotation(QDoubleValidator::StandardNotation);
+    ui->syncRateEdit->setValidator(validator2);
+
     ui->timerSlider->setRange(0, 2000);
     ui->timerSlider->setValue(interval);
     ui->timerLabel->setText(QString::number(interval) + "ms");
+
+
+    ui->rowSlider->setRange(20, 512);
+    ui->collumSlider->setRange(20, 512);
+    ui->rowSlider->setValue(256);
+    ui->collumSlider->setValue(256);
+    ui->rowDisplay->setText("Rows: 256");
+    ui->collumDisplay->setText("Collums: 256");
+
     connect(grid,SIGNAL(generationChanged(int)), this, SLOT(onGenerationChanged(int)));
     connect(grid,SIGNAL(densityChanged(qreal)), this, SLOT(onDensityChanged(qreal)));
     connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
     connect(grid, SIGNAL(gridSizeChanged(int,int)), this, SLOT(onGridChanged(int,int)));
     connect(grid, SIGNAL(gameRuleChanged(QString)), this, SLOT(onGameRuleChanged(QString)));
+
+
+
+
 
 //    ui->currentGameRuleLabel->setText("B2/S23");
 //    ui->currentGridLabel->setText("256 X 256");
@@ -115,16 +137,11 @@ void MainWindow::on_ClearBtn_clicked()
 }
 
 
-void MainWindow::on_gridSizeBox_currentIndexChanged(int index)
-{
-    qDebug() << "Selected item:" << ui->gridSizeBox->itemText(index) << "index:" << index;
-    grid->changeGridSize(index);
-}
-
-
 void MainWindow::on_gameBox_currentIndexChanged(int index)
 {
-    grid->changeGame(index);
+    if (index < 6) {
+        grid->changeGame(index);
+    }
 }
 
 
@@ -156,5 +173,81 @@ void MainWindow::on_openFileBtn_clicked()
 void MainWindow::on_autoFitCheckBox_stateChanged(int state)
 {
     grid->changeAutoFitState(state);
+}
+
+
+void MainWindow::on_setSyncRateBtn_clicked()
+{
+    QString text = ui->syncRateEdit->text();
+    qDebug() << "set Sync rate:" << text;
+    bool convertSuccess;
+    qreal syncRate = text.toDouble(&convertSuccess);
+
+    if (convertSuccess && syncRate > 0 && syncRate <= 1) {
+        qDebug() << "Sync Rate:" << syncRate;
+        grid->setSyncRate(syncRate);
+    } else {
+        ui->syncRateEdit->setText("1.0");
+        QMessageBox::critical(this, tr("Error"), tr("Invalid input. Please enter a valid number range from 0 to 1"));
+    }
+}
+
+
+void MainWindow::on_fullyAsyncCheckBox_stateChanged(int state)
+{
+    if (state == Qt::Checked) {
+        grid->setIsFullyAsync(true);
+        ui->syncRateEdit->setDisabled(true);
+        ui->setSyncRateBtn->setDisabled(true);
+        ui->syncRateLabel->setDisabled(true);
+    } else {
+        grid->setIsFullyAsync(false);
+        ui->syncRateEdit->setDisabled(false);
+        ui->setSyncRateBtn->setDisabled(false);
+        ui->syncRateLabel->setDisabled(false);
+    }
+}
+
+
+void MainWindow::on_gameBox_activated(int index)
+{
+    qDebug()<< "on_gameBox_activated:" << index;
+    if (index == 6) {
+        bool ok;
+        QRegularExpression ruleExp("B[0-8]{1,8}/S[0-8]{1,8}");
+
+        QString text = QInputDialog::getText(this, tr("Input BS Rule"),
+                                             tr("Input like: B2/S23"), QLineEdit::Normal,
+                                             "", &ok, Qt::MSWindowsFixedSizeDialogHint);
+
+        if (ok && !text.isEmpty()) {
+            if (ruleExp.match(text).hasMatch()) {
+                qDebug() << "User input:" << text;
+                grid->changeGame(text);
+            } else {
+                QMessageBox::critical(this, tr("Error"), tr("Invalid input. Please enter a rule in the format Bx/Sy."));
+            }
+        }
+    }
+}
+
+
+void MainWindow::on_rowSlider_valueChanged(int value)
+{
+    ui->rowDisplay->setText("Rows: " + QString::number(value));
+    grid->changeRow(value);
+}
+
+
+void MainWindow::on_collumSlider_valueChanged(int value)
+{
+    ui->collumDisplay->setText("Collums: " + QString::number(value));
+    grid->changeCollum(value);
+}
+
+
+void MainWindow::on_rowDisplay_linkActivated(const QString &link)
+{
+    qDebug() << "on_rowDisplay_linkActivated ....";
 }
 

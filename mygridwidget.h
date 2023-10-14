@@ -24,12 +24,17 @@ public:
     void randomInitGrid();
     void clearDisplay();
     void changeGridSize(int index);
+    void changeRow(int value);
+    void changeCollum(int value);
     void changeGame(int index);
+    void changeGame(QString ruleStr);
     void changeRecordState(int state);
     void changeAutoFitState(int state);
     void setMaxGenerations(int generations);
     void SaveFile();
     void OpenFile();
+    void setSyncRate(qreal rate);
+    void setIsFullyAsync(bool flag);
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;
@@ -56,6 +61,9 @@ private:
     QFile* file;
     QString gameName;
     qreal p0;
+    qreal probabilityOfLive;
+    bool isFullyAsync;
+    qreal syncRate;
     int maxGenerations;
     bool enableRecordStatistics;
     bool enableAutoFit;
@@ -69,7 +77,6 @@ private:
     void initGame();
     void initRecordStatisticsFile();
     qreal calculateSurviveRate();
-    qreal probabilityOfLive;
     void destory();
     void recordGameData(const QString &gameName, int gridSize, qreal p0, int evolutionCount, qreal survivePercentage);
     QString createGameNameByBSRule(const std::vector<int> &birthRules, const std::vector<int> &survivalRules);

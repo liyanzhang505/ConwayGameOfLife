@@ -20,23 +20,19 @@ private slots:
     void on_nextStepBtn_clicked();
     void on_timerSlider_valueChanged(int value);
     void on_pSlider_valueChanged(int value);
-
     void on_RandomInit_clicked();
-
-
     void on_ClearBtn_clicked();
-
-    void on_gridSizeBox_currentIndexChanged(int index);
-
     void on_gameBox_currentIndexChanged(int index);
-
     void on_EnableRecordCheckBox_stateChanged(int arg1);
-
     void on_saveFileBtn_clicked();
-
     void on_openFileBtn_clicked();
-
     void on_autoFitCheckBox_stateChanged(int arg1);
+    void on_setSyncRateBtn_clicked();
+    void on_fullyAsyncCheckBox_stateChanged(int arg1);
+    void on_gameBox_activated(int index);
+    void on_rowSlider_valueChanged(int value);
+    void on_collumSlider_valueChanged(int value);
+    void on_rowDisplay_linkActivated(const QString &link);
 
 public slots:
     void onGenerationChanged(int value);

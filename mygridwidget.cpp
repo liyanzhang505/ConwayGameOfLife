@@ -14,7 +14,8 @@
 #include "rletools.h"
 
 
-MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_SIZE_256), rows(GRID_SIZE_256), probabilityOfLive(0)
+MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_SIZE_256), rows(GRID_SIZE_256),
+    probabilityOfLive(0), syncRate(1.0), isFullyAsync(false)
 {
     initRecordStatisticsFile();
     initGame();
@@ -195,6 +196,25 @@ void MyGridWidget::clearDisplay()
     update();
 }
 
+void MyGridWidget::changeGame(QString ruleStr) {
+    qDebug()<<"change game rule : " << ruleStr;
+    delete bsRule;
+    delete game;
+
+    std::vector<int> birthSetting;
+    std::vector<int> surviveSetting;
+    RLETools::parseRule(ruleStr, birthSetting, surviveSetting);
+
+    bsRule = new BirthSurviveRule(birthSetting, surviveSetting);
+    game = new ConwayGame(rows, cols, bsRule);
+
+    gameName = ruleStr;
+    qDebug() << "Change to game: " << gameName;
+    emit gameRuleChanged(gameName);
+    clearDisplay();
+}
+
+
 void MyGridWidget::changeGame(int index) {
     qDebug()<<"change game index : " << index;
     delete bsRule;
@@ -250,6 +270,16 @@ QString MyGridWidget::createGameNameByBSRule(const std::vector<int> &birthRules,
     return name;
 }
 
+void MyGridWidget::setSyncRate(qreal rate)
+{
+    syncRate = rate;
+}
+
+void MyGridWidget::setIsFullyAsync(bool flag)
+{
+    isFullyAsync = flag;
+}
+
 void MyGridWidget::changeRecordState(int state)
 {
     if (state == Qt::Checked) {
@@ -282,6 +312,40 @@ void MyGridWidget::changeGridSize(int index)
         rows = GRID_SIZE_20;
         cols = GRID_SIZE_20;
     }
+    generations = 0;
+    expandCount = 0;
+    emit generationChanged(generations);
+    emit gridSizeChanged(rows, cols);
+
+    initGame();
+    initCells();
+    update();
+}
+
+void MyGridWidget::changeRow(int value)
+{
+    timer->stop();
+    delete game;
+    destroyCells();
+
+    rows = value;
+    generations = 0;
+    expandCount = 0;
+    emit generationChanged(generations);
+    emit gridSizeChanged(rows, cols);
+
+    initGame();
+    initCells();
+    update();
+}
+
+void MyGridWidget::changeCollum(int value)
+{
+    timer->stop();
+    delete game;
+    destroyCells();
+
+    cols = value;
     generations = 0;
     expandCount = 0;
     emit generationChanged(generations);
@@ -374,9 +438,11 @@ void MyGridWidget::UpdateCellStates()
     int* pCellsPrev = new int[rows * cols];
     memcpy(pCellsPrev, pCells, rows * cols * sizeof(int));
 
-//    game->evolve(pCells);
-//    game->partialSyncEvolve(pCells, 1.0);
-    game->fullyAsyncEvolve(pCells);
+    if (isFullyAsync) {
+        game->fullyAsyncEvolve(pCells);
+    } else {
+        game->partialSyncEvolve(pCells, syncRate);
+    }
 
     generations += 1;
     density = calculateDensity();

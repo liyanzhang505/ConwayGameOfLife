@@ -10,7 +10,6 @@ public:
     RLETools();
     static bool saveToRLE(const QString &filename, const int* pCells, int rows, int cols, const std::vector<int> &birthRules, const std::vector<int> &survivalRules);
     static bool loadFromRLE(const QString &filename, int* &pCells, int &rows, int &cols, std::vector<int> &birthRules, std::vector<int> &survivalRules);
-private:
     static bool parseRule(const QString &ruleStr, std::vector<int> &birthRules, std::vector<int> &survivalRules);
 };
 
