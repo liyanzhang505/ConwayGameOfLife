@@ -17,7 +17,7 @@ MainWindow::MainWindow(QWidget *parent)
     grid->changeAutoFitState(Qt::Unchecked);
     grid->setMaxGenerations(512);
     ui->maxGenerationsEdit->setText(QString::number(512));
-    QIntValidator *validator = new QIntValidator(0, 100000000, this);
+    QIntValidator *validator = new QIntValidator(0, 1000000000, this);
     ui->maxGenerationsEdit->setValidator(validator);
     ui->maxGenerationsEdit->setDisabled(true);
     ui->maxGenerationsSetBtn->setDisabled(true);
@@ -44,14 +44,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
     connect(grid, SIGNAL(gridSizeChanged(int,int)), this, SLOT(onGridChanged(int,int)));
     connect(grid, SIGNAL(gameRuleChanged(QString)), this, SLOT(onGameRuleChanged(QString)));
-
-
-
-
-
-//    ui->currentGameRuleLabel->setText("B2/S23");
-//    ui->currentGridLabel->setText("256 X 256");
-
+    connect(grid, SIGNAL(showDebug(QString)), this, SLOT(onAppendDebugShow(QString)));
 
     ui->pSlider->setRange(0, 10);
     ui->pSlider->setValue(probabilityOfLive * 10);
@@ -115,6 +108,12 @@ void MainWindow::onGridChanged(int rows, int cols)
 void MainWindow::onGameRuleChanged(QString ruleStr)
 {
     ui->currentGameRuleLabel->setText(ruleStr);
+}
+
+void MainWindow::onAppendDebugShow(QString info)
+{
+    ui->debugBrowser->append(info);
+    ui->debugBrowser->moveCursor(QTextCursor::End);
 }
 
 void MainWindow::on_pSlider_valueChanged(int value)
@@ -249,5 +248,12 @@ void MainWindow::on_collumSlider_valueChanged(int value)
 void MainWindow::on_rowDisplay_linkActivated(const QString &link)
 {
     qDebug() << "on_rowDisplay_linkActivated ....";
+}
+
+
+void MainWindow::on_maxGenerationsSetBtn_clicked()
+{
+    int value = ui->maxGenerationsEdit->text().toInt();
+    grid->setMaxGenerations(value);
 }
 

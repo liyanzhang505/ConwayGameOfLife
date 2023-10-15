@@ -128,7 +128,7 @@ bool RLETools::loadFromRLE(const QString &filename, int* &pCells, int &rows, int
                 for (int i = 0; i < rows; i++) {
                      QString rowStr = "row" + QString::number(i) + ": ";
                     for (int j = 0; j < cols; j++) {
-                        rowStr + QString::number(pCells[i * cols + j]) + " ";
+                        rowStr += QString::number(pCells[i * cols + j]);
                     }
                     qDebug() << rowStr;
                 }

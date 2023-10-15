@@ -34,12 +34,15 @@ private slots:
     void on_collumSlider_valueChanged(int value);
     void on_rowDisplay_linkActivated(const QString &link);
 
+    void on_maxGenerationsSetBtn_clicked();
+
 public slots:
     void onGenerationChanged(int value);
     void onDensityChanged(qreal value);
     void onActivityChanged(qreal value);
     void onGridChanged(int rows, int cols);
     void onGameRuleChanged(QString ruleStr);
+    void onAppendDebugShow(QString info);
 private:
     Ui::MainWindow *ui;
     MyGridWidget* grid;

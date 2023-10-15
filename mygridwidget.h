@@ -46,6 +46,7 @@ signals:
     void activityChanged(qreal value);
     void gridSizeChanged(int rows, int cols);
     void gameRuleChanged(QString ruleStr);
+    void showDebug(QString info);
 private:
     QTimer* timer;
     int* pCells;
@@ -60,7 +61,6 @@ private:
     GameBase* game;
     QFile* file;
     QString gameName;
-    qreal p0;
     qreal probabilityOfLive;
     bool isFullyAsync;
     qreal syncRate;
@@ -76,9 +76,8 @@ private:
     void initBackgroud();
     void initGame();
     void initRecordStatisticsFile();
-    qreal calculateSurviveRate();
     void destory();
-    void recordGameData(const QString &gameName, int gridSize, qreal p0, int evolutionCount, qreal survivePercentage);
+    void recordGameData(qreal density, qreal activity);
     QString createGameNameByBSRule(const std::vector<int> &birthRules, const std::vector<int> &survivalRules);
     qreal calculateDensity();
     qreal calculateActivity(int *pCellsPrev);

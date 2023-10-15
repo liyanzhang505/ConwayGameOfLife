@@ -17,7 +17,6 @@
 MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_SIZE_256), rows(GRID_SIZE_256),
     probabilityOfLive(0), syncRate(1.0), isFullyAsync(false)
 {
-    initRecordStatisticsFile();
     initGame();
     initBackgroud();
     initCells();
@@ -48,22 +47,25 @@ void MyGridWidget::initBackgroud()
     this->show();
 }
 
-void MyGridWidget::recordGameData(const QString& gameName,
-                                  int gridSize,
-                                  qreal p0,
-                                  int evolutionCount,
-                                  qreal survivePercentage) {
+void MyGridWidget::recordGameData(qreal density, qreal activity) {
+    if (file == nullptr) {
+        initRecordStatisticsFile();
+    }
+
     if (file->open(QIODevice::WriteOnly | QIODevice::Append)) {
         QTextStream output(file);
         output << gameName << ","
-               << gridSize << ","
-               << p0 << ","
-               << evolutionCount << ","
-               << survivePercentage << "\n";
-
+               << rows << ","
+               << cols << ","
+               << probabilityOfLive << ","
+               << generations << ","
+               << syncRate << ","
+               << isFullyAsync << ","
+               << density << ","
+               << activity << "\n";
         file->close();
     } else {
-        qWarning("Can not open record file....");
+        qCritical("Can not open record file....");
     }
 }
 
@@ -75,19 +77,17 @@ void MyGridWidget::initRecordStatisticsFile()
     file = new QFile(fileName);
     QFileInfo fileInfo(*file);
     QString absolutePath = fileInfo.absoluteFilePath();
+    emit showDebug("Statistics file path: " + absolutePath);
     if (fileInfo.size() == 0) {
-        QStringList headers = {"GameName", "gridsize", "p0", "time", "p"};
-        qDebug() << "Creating new statistics to file: " + absolutePath;
+        QStringList headers = {"GameName", "rows", "cols", "p0", "time", "sync_rate", "is_fully_async", "density", "activity"};
         if (file->open(QIODevice::WriteOnly)) {
             QTextStream output(file);
             output << headers.join(",") << "\n";
             file->close();
         } else {
-            qWarning("Can not open record file....");
+            qCritical("Can not open record file....");
         }
 
-    } else {
-        qDebug() << "Output statistics to file: " + absolutePath;
     }
 }
 
@@ -98,14 +98,14 @@ void MyGridWidget::setMaxGenerations(int generations)
 
 void MyGridWidget::SaveFile()
 {
-    QString fileName =  QFileDialog::getSaveFileName(this,"打开文件","","All(*.*);;Text files (*.txt, *.rle)");
+    QString fileName =  QFileDialog::getSaveFileName(this,"打开文件","","RLE files (*.rle)");
     if(fileName.isNull())
     {
         QMessageBox::information(this,"Warning","Havn't input the filename.");
         return;
     }
 
-    qDebug() << "Save file to :" << fileName;
+    emit showDebug("Save file to:" + fileName);
 
     RLETools::saveToRLE(fileName, pCells, rows, cols, game->getBirthSetting(), game->getSurviveSetting());
 }
@@ -128,9 +128,11 @@ void MyGridWidget::OpenFile()
     }
 
     if (RLETools::loadFromRLE(fileName,tmpPcells, tmpRows, tmpCols, birthSetting, surviveSetting) != true) {
-        QMessageBox::information(this,"Error","Load rle file error!");
+        QMessageBox::critical(this,"Error","Load rle file error!");
         return;
     }
+
+    emit showDebug("Open file successfully from:" + fileName);
 
     timer->stop();
     delete game;
@@ -151,21 +153,6 @@ void MyGridWidget::OpenFile()
     emit gameRuleChanged(gameName);
     update();
 }
-
-qreal MyGridWidget::calculateSurviveRate()
-{
-    int sum = 0;
-    for(int i = 0; i < rows; ++i) {
-        for(int j = 0; j < cols; ++j) {
-            if(pCells[i * cols + j] == 1) {
-                sum++;
-            }
-        }
-    }
-
-    return qreal(sum) / (rows * cols);
-}
-
 
 void MyGridWidget::initGame()
 {
@@ -408,9 +395,9 @@ void MyGridWidget::randomInitGrid()
 
     update();
     if (enableRecordStatistics) {
-        qreal surviveRate = calculateSurviveRate();
-        qDebug() << "init surviveRate: " << surviveRate;
-        recordGameData(gameName, rows, probabilityOfLive, generations, surviveRate);
+        qreal density = calculateDensity();
+        qDebug() << "init density: " << density;
+        recordGameData(density, 0);
     }
 }
 
@@ -459,9 +446,7 @@ void MyGridWidget::UpdateCellStates()
         if (generations >= maxGenerations) {
             timer->stop();
         }
-        qreal surviveRate = calculateSurviveRate();
-        qDebug() << "surviveRate: " << surviveRate;
-        recordGameData(gameName, rows, probabilityOfLive, generations, surviveRate);
+        recordGameData(density, activity);
     }
 
 }
@@ -512,10 +497,6 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
         alpha = 0.4;
         lineWidth = 1.0;
     }
-
-
-
-    std::cout << "row:" << rows << " alpha: " << alpha << " lineWidth: " << lineWidth << std::endl;
 
     // Line setting, set line to back with width of 1.
     QColor penColor = QColor(Qt::black);
