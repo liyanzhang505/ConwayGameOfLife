@@ -163,7 +163,7 @@ void MyGridWidget::initGame()
     if (bsRule == NULL) {
         bsRule = new BirthSurviveRule({3}, {2, 3});
         game = new ConwayGame(rows, cols, bsRule);
-        gameName =GAME_NAME_CONWAYGAME;
+        gameName = "B2/S23";
         emit gameRuleChanged(gameName);
     } else {
         game = new ConwayGame(rows, cols, bsRule);
@@ -427,7 +427,9 @@ void MyGridWidget::UpdateCellStates()
 
     if (isFullyAsync) {
         game->fullyAsyncEvolve(pCells);
-    } else {
+    } else if (syncRate == 1.0) {
+        game->evolve(pCells);
+    }else {
         game->partialSyncEvolve(pCells, syncRate);
     }
 

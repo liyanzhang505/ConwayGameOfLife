@@ -66,7 +66,6 @@ void ConwayGame::partialSyncEvolve(int *grid, qreal syncRate)
 
     std::shuffle(cellIndices.begin(), cellIndices.end(), engine);
 
-
     std::memcpy(pBuff, grid, rows * cols * sizeof(int));
     for(int i = 0; i < cellsToUpdate; ++i) {
         int index = cellIndices[i];
