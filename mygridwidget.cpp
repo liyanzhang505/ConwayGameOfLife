@@ -72,8 +72,8 @@ void MyGridWidget::recordGameData(qreal density, qreal activity) {
 
 void MyGridWidget::initRecordStatisticsFile()
 {
-    QString currentDate = QDate::currentDate().toString("yyyy_MM_dd");
-    QString fileName = currentDate + "_statistics.csv";
+    QString currentDateTime = QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss");
+    QString fileName = currentDateTime + "_statistics.csv";
     file = new QFile(fileName);
     QFileInfo fileInfo(*file);
     QString absolutePath = fileInfo.absoluteFilePath();
