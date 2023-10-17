@@ -125,13 +125,13 @@ bool RLETools::loadFromRLE(const QString &filename, int* &pCells, int &rows, int
                 x = 0;
                 repeat = 0;
             } else if (ch == '!') {
-                for (int i = 0; i < rows; i++) {
-                     QString rowStr = "row" + QString::number(i) + ": ";
-                    for (int j = 0; j < cols; j++) {
-                        rowStr += QString::number(pCells[i * cols + j]);
-                    }
-                    qDebug() << rowStr;
-                }
+//                for (int i = 0; i < rows; i++) {
+//                     QString rowStr = "row" + QString::number(i) + ": ";
+//                    for (int j = 0; j < cols; j++) {
+//                        rowStr += QString::number(pCells[i * cols + j]);
+//                    }
+//                    qDebug() << rowStr;
+//                }
                 return true;
             }
         }

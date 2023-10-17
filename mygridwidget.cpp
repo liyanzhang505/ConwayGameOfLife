@@ -69,7 +69,6 @@ void MyGridWidget::recordGameData(qreal density, qreal activity) {
     }
 }
 
-
 void MyGridWidget::initRecordStatisticsFile()
 {
     QString currentDateTime = QDateTime::currentDateTime().toString("yyyy_MM_dd_hh_mm_ss");
@@ -163,7 +162,7 @@ void MyGridWidget::initGame()
     if (bsRule == NULL) {
         bsRule = new BirthSurviveRule({3}, {2, 3});
         game = new ConwayGame(rows, cols, bsRule);
-        gameName = "B2/S23";
+        gameName = "B3/S23";
         emit gameRuleChanged(gameName);
     } else {
         game = new ConwayGame(rows, cols, bsRule);
@@ -444,10 +443,12 @@ void MyGridWidget::UpdateCellStates()
 
     update();
 
+    if (generations >= maxGenerations) {
+        timer->stop();
+    }
+
     if (enableRecordStatistics) {
-        if (generations >= maxGenerations) {
-            timer->stop();
-        }
+
         recordGameData(density, activity);
     }
 

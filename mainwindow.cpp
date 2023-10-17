@@ -19,8 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->maxGenerationsEdit->setText(QString::number(512));
     QIntValidator *validator = new QIntValidator(0, 1000000000, this);
     ui->maxGenerationsEdit->setValidator(validator);
-    ui->maxGenerationsEdit->setDisabled(true);
-    ui->maxGenerationsSetBtn->setDisabled(true);
 
     ui->syncRateEdit->setText("1.0");
     QDoubleValidator *validator2 = new QDoubleValidator(0.000001, 1.0, 6, this);
@@ -31,14 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->timerSlider->setValue(interval);
     ui->timerLabel->setText(QString::number(interval) + "ms");
 
-
-    ui->rowSlider->setRange(20, 512);
-    ui->collumSlider->setRange(20, 512);
-    ui->rowSlider->setValue(256);
-    ui->collumSlider->setValue(256);
-    ui->rowDisplay->setText("Rows: 256");
-    ui->collumDisplay->setText("Collums: 256");
-
     connect(grid,SIGNAL(generationChanged(int)), this, SLOT(onGenerationChanged(int)));
     connect(grid,SIGNAL(densityChanged(qreal)), this, SLOT(onDensityChanged(qreal)));
     connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
@@ -46,10 +36,21 @@ MainWindow::MainWindow(QWidget *parent)
     connect(grid, SIGNAL(gameRuleChanged(QString)), this, SLOT(onGameRuleChanged(QString)));
     connect(grid, SIGNAL(showDebug(QString)), this, SLOT(onAppendDebugShow(QString)));
 
+    int defaultGridSize = 100;
+    ui->rowSlider->setRange(20, 512);
+    ui->collumSlider->setRange(20, 512);
+    ui->rowSlider->setValue(defaultGridSize);
+    ui->collumSlider->setValue(defaultGridSize);
+    ui->rowDisplay->setText("Rows: " + QString::number(defaultGridSize));
+    ui->collumDisplay->setText("Collums: " + QString::number(defaultGridSize));
+    grid->changeRow(defaultGridSize);
+    grid->changeCollum(defaultGridSize);
+
     ui->pSlider->setRange(0, 10);
     ui->pSlider->setValue(probabilityOfLive * 10);
     ui->pDisplay->setText(QString::number(probabilityOfLive));
     grid->setProbabilityOfLive(probabilityOfLive);
+
 
     qDebug() <<"window width:"  << width() << "height:" << height();
 }
@@ -146,13 +147,6 @@ void MainWindow::on_gameBox_currentIndexChanged(int index)
 
 void MainWindow::on_EnableRecordCheckBox_stateChanged(int state)
 {
-    if (state == Qt::Checked) {
-        ui->maxGenerationsEdit->setDisabled(false);
-        ui->maxGenerationsSetBtn->setDisabled(false);
-    } else {
-        ui->maxGenerationsEdit->setDisabled(true);
-        ui->maxGenerationsSetBtn->setDisabled(true);
-    }
     grid->changeRecordState(state);
 }
 
@@ -216,7 +210,7 @@ void MainWindow::on_gameBox_activated(int index)
         QRegularExpression ruleExp("B[0-8]{1,8}/S[0-8]{1,8}");
 
         QString text = QInputDialog::getText(this, tr("Input BS Rule"),
-                                             tr("Input like: B2/S23"), QLineEdit::Normal,
+                                             tr("Input like: B3/S23"), QLineEdit::Normal,
                                              "", &ok, Qt::MSWindowsFixedSizeDialogHint);
 
         if (ok && !text.isEmpty()) {
