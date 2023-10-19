@@ -266,6 +266,80 @@ void MyGridWidget::setIsFullyAsync(bool flag)
     isFullyAsync = flag;
 }
 
+void MyGridWidget::runTest1()
+{
+    int max_g = 0;
+    rows = 50;
+    cols = 50;
+    probabilityOfLive = 0.5;
+    enableRecordStatistics = 1;
+    changeGame(GAME_INDEX_CONWAYGAME);
+    for (qreal sy_rate = 0.4; sy_rate<= 1.0; sy_rate += 0.02) {
+        syncRate = sy_rate;
+        qDebug() << "current sy_rate:" << sy_rate;
+        randomInitGrid();
+        if (sy_rate > 0.7) {
+            max_g = 10000;
+        } else if ( sy_rate >= 0.5) {
+            max_g = 300000;
+        } else {
+            max_g = 500000;
+        }
+
+        for (int g = 0; g <=max_g; g++) {
+            UpdateCellStates();
+        }
+    }
+    qDebug() << "run test1 done..";
+    emit showDebug("run test1 done..");
+}
+
+void MyGridWidget::runTest2()
+{
+    rows = 256;
+    cols = 256;
+    enableRecordStatistics = 1;
+    for (int gameIndex = GAME_INDEX_2X2; gameIndex < GAME_INDEX_MOVE; gameIndex++) {
+        qDebug() << "game Idex: " << gameIndex;
+        changeGame(gameIndex);
+        for (int i = 0; i < 5; i++) {
+            qDebug() << "i: " << i;
+            randomInitGrid();
+            for (int g = 0; g < 20000; g++) {
+                UpdateCellStates();
+            }
+        }
+    }
+    emit showDebug("run test test done..");
+}
+
+
+void MyGridWidget::runTestP0AndSyncRateAndDensity()
+{
+    rows = 100;
+    cols = 100;
+    std::vector<qreal> syn_rates = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
+    for (qreal initRate = 0.02; initRate<= 0.99; initRate += 0.02) {
+        probabilityOfLive = initRate;
+        for (qreal j: syn_rates) {
+            syncRate = j;
+            randomInitGrid();
+            enableRecordStatistics = 0;
+            for (int g = 0; g < 5000; g++) {
+                UpdateCellStates();
+            }
+            enableRecordStatistics = 1;
+            for (int g = 5000; g < 6000; g++) {
+                UpdateCellStates();
+            }
+        }
+    }
+    emit gridSizeChanged(rows, cols);
+    emit showDebug("runTestP0AndSyncRateAndDensity test done..");
+
+}
+
+
 void MyGridWidget::changeRecordState(int state)
 {
     if (state == Qt::Checked) {
@@ -310,6 +384,11 @@ void MyGridWidget::changeGridSize(int index)
 
 void MyGridWidget::changeRow(int value)
 {
+    if(value == rows) {
+        return;
+    }
+
+
     timer->stop();
     delete game;
     destroyCells();
@@ -327,6 +406,10 @@ void MyGridWidget::changeRow(int value)
 
 void MyGridWidget::changeCollum(int value)
 {
+    if(value == cols) {
+        return;
+    }
+
     timer->stop();
     delete game;
     destroyCells();
@@ -514,13 +597,17 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
     double cellHeight = calculateCellHeight();
     for(double k = 0; k <= width(); k += cellWidth)
     {
-        painter.drawLine(k, 0, k, height());
+        QPointF point1(k, 0);
+        QPointF point2(k, height());
+        painter.drawLine(point1, point2);
     }
 
     // Draw vertical lines
     for(double k = 0; k <= height(); k += cellHeight)
     {
-        painter.drawLine(0, k, width(), k);
+        QPointF point1(0, k);
+        QPointF point2(width(), k);
+        painter.drawLine(point1, point2);
     }
 
     // Paint alive cell
@@ -532,7 +619,7 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
             {
                 double x = calculateCellWidth() * col;
                 double y = calculateCellHeight() * row;
-                QRect cellField(x + lineWidth, y + lineWidth, calculateCellWidth() - lineWidth, calculateCellHeight() - lineWidth);
+                QRectF cellField(x + lineWidth, y + lineWidth, calculateCellWidth() - lineWidth, calculateCellHeight() - lineWidth);
                 painter.setBrush(QBrush(Qt::black));
                 painter.fillRect(cellField, painter.brush());
             }

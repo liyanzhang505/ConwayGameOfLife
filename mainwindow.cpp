@@ -29,29 +29,28 @@ MainWindow::MainWindow(QWidget *parent)
     ui->timerSlider->setValue(interval);
     ui->timerLabel->setText(QString::number(interval) + "ms");
 
-    connect(grid,SIGNAL(generationChanged(int)), this, SLOT(onGenerationChanged(int)));
-    connect(grid,SIGNAL(densityChanged(qreal)), this, SLOT(onDensityChanged(qreal)));
-    connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
-    connect(grid, SIGNAL(gridSizeChanged(int,int)), this, SLOT(onGridChanged(int,int)));
-    connect(grid, SIGNAL(gameRuleChanged(QString)), this, SLOT(onGameRuleChanged(QString)));
-    connect(grid, SIGNAL(showDebug(QString)), this, SLOT(onAppendDebugShow(QString)));
-
-    int defaultGridSize = 100;
-    ui->rowSlider->setRange(20, 512);
-    ui->collumSlider->setRange(20, 512);
+    int defaultGridSize = 50;
+    ui->rowSlider->setRange(20, 2000);
+    ui->collumSlider->setRange(20, 2000);
     ui->rowSlider->setValue(defaultGridSize);
     ui->collumSlider->setValue(defaultGridSize);
     ui->rowDisplay->setText("Rows: " + QString::number(defaultGridSize));
     ui->collumDisplay->setText("Collums: " + QString::number(defaultGridSize));
     grid->changeRow(defaultGridSize);
     grid->changeCollum(defaultGridSize);
+    ui->currentGridLabel->setText(QString::number(defaultGridSize) + " X " + QString::number(defaultGridSize));
 
     ui->pSlider->setRange(0, 10);
     ui->pSlider->setValue(probabilityOfLive * 10);
     ui->pDisplay->setText(QString::number(probabilityOfLive));
     grid->setProbabilityOfLive(probabilityOfLive);
 
-
+    connect(grid, SIGNAL(gridSizeChanged(int,int)), this, SLOT(onGridChanged(int,int)));
+    connect(grid,SIGNAL(generationChanged(int)), this, SLOT(onGenerationChanged(int)));
+    connect(grid,SIGNAL(densityChanged(qreal)), this, SLOT(onDensityChanged(qreal)));
+    connect(grid,SIGNAL(activityChanged(qreal)), this, SLOT(onActivityChanged(qreal)));
+    connect(grid, SIGNAL(gameRuleChanged(QString)), this, SLOT(onGameRuleChanged(QString)));
+    connect(grid, SIGNAL(showDebug(QString)), this, SLOT(onAppendDebugShow(QString)));
     qDebug() <<"window width:"  << width() << "height:" << height();
 }
 
@@ -104,6 +103,17 @@ void MainWindow::onActivityChanged(qreal value)
 void MainWindow::onGridChanged(int rows, int cols)
 {
     ui->currentGridLabel->setText(QString::number(rows) + " X " + QString::number(cols));
+
+    if (rows != ui->rowSlider->value()) {
+        qDebug() << "sdfsfsfsfsfsf";
+        ui->rowSlider->setValue(rows);
+        ui->rowDisplay->setText("Rows: " + QString::number(rows));
+    }
+
+    if (cols != ui->collumSlider->value()) {
+        ui->collumSlider->setValue(cols);
+        ui->collumDisplay->setText("Collums: " + QString::number(cols));
+    }
 }
 
 void MainWindow::onGameRuleChanged(QString ruleStr)
@@ -227,6 +237,7 @@ void MainWindow::on_gameBox_activated(int index)
 
 void MainWindow::on_rowSlider_valueChanged(int value)
 {
+    qDebug() << "on_rowSlider_valueChanged";
     ui->rowDisplay->setText("Rows: " + QString::number(value));
     grid->changeRow(value);
 }
@@ -234,6 +245,7 @@ void MainWindow::on_rowSlider_valueChanged(int value)
 
 void MainWindow::on_collumSlider_valueChanged(int value)
 {
+    qDebug() << "on_collumSlider_valueChanged";
     ui->collumDisplay->setText("Collums: " + QString::number(value));
     grid->changeCollum(value);
 }
@@ -249,5 +261,11 @@ void MainWindow::on_maxGenerationsSetBtn_clicked()
 {
     int value = ui->maxGenerationsEdit->text().toInt();
     grid->setMaxGenerations(value);
+}
+
+void MainWindow::on_runTestBtn_clicked()
+{
+    grid->runTest1();
+//    grid->runTestP0AndSyncRateAndDensity();
 }
 

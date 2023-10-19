@@ -35,6 +35,9 @@ public:
     void OpenFile();
     void setSyncRate(qreal rate);
     void setIsFullyAsync(bool flag);
+    void runTest1();
+    void runTestP0AndSyncRateAndDensity();
+    void runTest2();
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

@@ -35,6 +35,7 @@ private slots:
     void on_rowDisplay_linkActivated(const QString &link);
 
     void on_maxGenerationsSetBtn_clicked();
+    void on_runTestBtn_clicked();
 
 public slots:
     void onGenerationChanged(int value);
