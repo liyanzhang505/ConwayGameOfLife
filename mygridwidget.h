@@ -38,6 +38,8 @@ public:
     void runTest1();
     void runTestP0AndSyncRateAndDensity();
     void runTest2();
+    void runTestLowerP0();
+    void runTest1024();
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

@@ -89,17 +89,12 @@
              </item>
              <item>
               <property name="text">
-               <string>2x2 Automata</string>
+               <string>2x2</string>
               </property>
              </item>
              <item>
               <property name="text">
                <string>move</string>
-              </property>
-             </item>
-             <item>
-              <property name="text">
-               <string>B2/S2</string>
               </property>
              </item>
              <item>
@@ -139,19 +134,19 @@
               <rect>
                <x>10</x>
                <y>120</y>
-               <width>64</width>
+               <width>111</width>
                <height>32</height>
               </rect>
              </property>
              <property name="text">
-              <string>Probability
+              <string>Initial Probability
 of Live</string>
              </property>
             </widget>
             <widget class="QSlider" name="pSlider">
              <property name="geometry">
               <rect>
-               <x>80</x>
+               <x>110</x>
                <y>120</y>
                <width>91</width>
                <height>25</height>
@@ -170,8 +165,8 @@ of Live</string>
             <widget class="QLabel" name="pDisplay">
              <property name="geometry">
               <rect>
-               <x>180</x>
-               <y>111</y>
+               <x>200</x>
+               <y>110</y>
                <width>21</width>
                <height>41</height>
               </rect>

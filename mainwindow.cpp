@@ -5,6 +5,7 @@
 #include <QRegularExpressionValidator>
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QStatusBar>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::MainWindow), grid(new MyGridWidget(this)),
@@ -12,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->gridLayout->addWidget(grid);
+    setWindowTitle("Game of Life");
 
     grid->changeRecordState(Qt::Unchecked);
     grid->changeAutoFitState(Qt::Unchecked);
@@ -29,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->timerSlider->setValue(interval);
     ui->timerLabel->setText(QString::number(interval) + "ms");
 
-    int defaultGridSize = 50;
+    int defaultGridSize = 256;
     ui->rowSlider->setRange(20, 2000);
     ui->collumSlider->setRange(20, 2000);
     ui->rowSlider->setValue(defaultGridSize);
@@ -149,7 +151,7 @@ void MainWindow::on_ClearBtn_clicked()
 
 void MainWindow::on_gameBox_currentIndexChanged(int index)
 {
-    if (index < 6) {
+    if (index < 5) {
         grid->changeGame(index);
     }
 }
@@ -215,7 +217,7 @@ void MainWindow::on_fullyAsyncCheckBox_stateChanged(int state)
 void MainWindow::on_gameBox_activated(int index)
 {
     qDebug()<< "on_gameBox_activated:" << index;
-    if (index == 6) {
+    if (index == 5) {
         bool ok;
         QRegularExpression ruleExp("B[0-8]{1,8}/S[0-8]{1,8}");
 
@@ -265,7 +267,10 @@ void MainWindow::on_maxGenerationsSetBtn_clicked()
 
 void MainWindow::on_runTestBtn_clicked()
 {
-    grid->runTest1();
+//    grid->runTest1();
 //    grid->runTestP0AndSyncRateAndDensity();
+    grid->runTestLowerP0();
+//    grid->runTest1024();
+
 }
 

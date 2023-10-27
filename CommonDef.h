@@ -6,7 +6,6 @@
 #define GAME_INDEX_PSEUDOLIFE 2
 #define GAME_INDEX_2X2 3
 #define GAME_INDEX_MOVE 4
-#define GAME_INDEX_B2S2 5
 
 
 #define GRID_INDEX_256 0

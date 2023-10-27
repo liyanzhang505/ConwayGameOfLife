@@ -226,10 +226,6 @@ void MyGridWidget::changeGame(int index) {
             bsRule = new BirthSurviveRule({3, 6, 8}, {2, 4, 5});
             game = new ConwayGame(rows, cols, bsRule);
             break;
-        case GAME_INDEX_B2S2:
-            bsRule = new BirthSurviveRule({2}, {2});
-            game = new ConwayGame(rows, cols, bsRule);
-            break;
         default:
             bsRule = new BirthSurviveRule({3}, {2, 3});
             game = new ConwayGame(rows, cols, bsRule);
@@ -266,6 +262,56 @@ void MyGridWidget::setIsFullyAsync(bool flag)
     isFullyAsync = flag;
 }
 
+void MyGridWidget::runTestLowerP0()
+{
+    rows = 256;
+    cols = 256;
+    emit gridSizeChanged(rows, cols);
+    enableRecordStatistics = 1;
+    std::vector<qreal> p0Sets = {0.1,  0.2, 0.3};
+        for (qreal p0: p0Sets) {
+            for (int gameIndex = GAME_INDEX_CONWAYGAME; gameIndex <= GAME_INDEX_MOVE; gameIndex++) {
+                qDebug() << "game Idex: " << gameIndex;
+                changeGame(gameIndex);
+                for (int i = 0; i < 5; i++) {
+                    qDebug() << "i: " << i;
+                    probabilityOfLive = p0;
+                    randomInitGrid();
+                    for (int g = 0; g < 512; g++) {
+                        UpdateCellStates();
+                    }
+                }
+            }
+        }
+        emit showDebug("run test runTest1024 done..");
+}
+
+void MyGridWidget::runTest1024()
+{
+    rows = 1024;
+    cols = 1024;
+    emit gridSizeChanged(rows, cols);
+    enableRecordStatistics = 1;
+    std::vector<qreal> p0Sets = {0.1};
+    for (qreal p0: p0Sets) {
+        for (int gameIndex = GAME_INDEX_CONWAYGAME; gameIndex <= GAME_INDEX_MOVE; gameIndex++) {
+            qDebug() << "game Idex: " << gameIndex;
+            changeGame(gameIndex);
+            for (int i = 0; i < 5; i++) {
+                qDebug() << "i: " << i;
+                probabilityOfLive = p0;
+                randomInitGrid();
+                for (int g = 0; g < 512; g++) {
+                    UpdateCellStates();
+                }
+            }
+        }
+    }
+
+    emit showDebug("run test runTest1024 done..");
+}
+
+
 void MyGridWidget::runTest1()
 {
     int max_g = 0;
@@ -274,20 +320,28 @@ void MyGridWidget::runTest1()
     probabilityOfLive = 0.5;
     enableRecordStatistics = 1;
     changeGame(GAME_INDEX_CONWAYGAME);
-    for (qreal sy_rate = 0.4; sy_rate<= 1.0; sy_rate += 0.02) {
-        syncRate = sy_rate;
-        qDebug() << "current sy_rate:" << sy_rate;
-        randomInitGrid();
-        if (sy_rate > 0.7) {
-            max_g = 10000;
-        } else if ( sy_rate >= 0.5) {
-            max_g = 300000;
-        } else {
-            max_g = 500000;
-        }
 
-        for (int g = 0; g <=max_g; g++) {
-            UpdateCellStates();
+    for (qreal sy_rate = 0.44; sy_rate<= 1.0; sy_rate += 0.02) {
+        for (int i = 0; i < 5; i++) {
+            syncRate = sy_rate;
+            qDebug() << "current sy_rate:" << sy_rate;
+            randomInitGrid();
+            if (sy_rate >= 0.9) {
+                max_g = 20000;
+            } else if (sy_rate >= 0.8) {
+                max_g = 50000;
+            } else if (sy_rate >= 0.7) {
+                max_g = 100000;
+            } else if ( sy_rate >= 0.6) {
+                max_g = 200000;
+            } else if ( sy_rate >= 0.5) {
+                max_g = 600000;
+            } else {
+                max_g = 1000000;
+            }
+            for (int g = 0; g <=max_g; g++) {
+                UpdateCellStates();
+            }
         }
     }
     qDebug() << "run test1 done..";
@@ -574,8 +628,8 @@ void MyGridWidget::paintEvent(QPaintEvent* event)
         alpha = 0.1;
         lineWidth = 0.4;
     } else if (rows > 40 && rows <= 80) {
-        alpha = 0.2;
-        lineWidth = 0.6;
+        alpha = 0.1;
+        lineWidth = 0.5;
     } else if (rows > 20 && rows <= 40) {
         alpha = 0.3;
         lineWidth = 0.8;
