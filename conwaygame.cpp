@@ -84,13 +84,21 @@ ConwayGame::~ConwayGame()
 
 bool ConwayGame::isAlive(int *grid, int row, int col)
 {
+    static int row_start;
+    static int row_end;
+    static int col_start;
+    static int col_end;
+
+    row_start = std::max(row - 1, 0);
+    row_end = std::min(row + 2, rows);
+    col_start = std::max(col - 1, 0);
+    col_end = std::min(col + 2, cols);
 
     int aliveCount = 0;
-    for (int i = std::max(row - 1, 0); i < std::min(row + 2, rows); i++)
+    for (int i = row_start; i < row_end; i++)
     {
-        for (int j = std::max(col - 1, 0); j < std::min(col + 2, cols); j++)
+        for (int j = col_start; j < col_end; j++)
         {
-//            std::cout << "i: " << i <<  " j" << j << std::endl;
             aliveCount += grid[i * cols + j];
         }
     }
@@ -98,7 +106,16 @@ bool ConwayGame::isAlive(int *grid, int row, int col)
     // minus its own state
     aliveCount -= grid[row * cols + col] & 1;
 
+//    if ((3 == aliveCount) || ((2 == aliveCount) && (1 == grid[row * cols +  col])))
+//    {
+//        return true;
+//    }
+//    else
+//    {
+//        return false;
+//    }
 
+    // compat to all bs rules.
     if (grid[row * cols + col] == 1) {
         for (int surviveRule : bsRule->getSurviveSetting()) {
             if (surviveRule == aliveCount) {

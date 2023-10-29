@@ -40,6 +40,7 @@ public:
     void runTest2();
     void runTestLowerP0();
     void runTest1024();
+    void runTestEfficient();
 protected:
     void paintEvent(QPaintEvent* event) override;
     void mousePressEvent(QMouseEvent* event) override;

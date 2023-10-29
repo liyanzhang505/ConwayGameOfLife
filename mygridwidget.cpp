@@ -12,6 +12,8 @@
 #include <QMessageBox>
 #include "CommonDef.h"
 #include "rletools.h"
+#include <QElapsedTimer>
+#include <QThread>
 
 
 MyGridWidget::MyGridWidget(QWidget* parent) : QWidget(parent), cols(GRID_SIZE_256), rows(GRID_SIZE_256),
@@ -262,11 +264,36 @@ void MyGridWidget::setIsFullyAsync(bool flag)
     isFullyAsync = flag;
 }
 
+void MyGridWidget::runTestEfficient() {
+    enableRecordStatistics = 0;
+    probabilityOfLive = 0.5;
+    std::vector<qreal> vc512;
+
+    QElapsedTimer qTimer;
+    for (int i = 0; i < 5; i++) {
+        emit gridSizeChanged(512, 512);
+        randomInitGrid();
+        qTimer.restart();
+        for (int g = 0; g < 1000; g++) {
+            game->evolve(pCells);
+        }
+        vc512.push_back(qTimer.elapsed());
+        qDebug() << "512 by 512, 1000 generations spend: " << qTimer.elapsed();
+    }
+
+    qreal sum = 0;
+    for (qreal t: vc512) {
+        sum += t;
+    }
+    qDebug() << "sum" << sum;
+    qDebug() << "average:" << sum / 5;
+
+
+}
+
 void MyGridWidget::runTestLowerP0()
 {
-    rows = 256;
-    cols = 256;
-    emit gridSizeChanged(rows, cols);
+    emit gridSizeChanged(256, 256);
     enableRecordStatistics = 1;
     std::vector<qreal> p0Sets = {0.1,  0.2, 0.3};
         for (qreal p0: p0Sets) {
@@ -288,9 +315,8 @@ void MyGridWidget::runTestLowerP0()
 
 void MyGridWidget::runTest1024()
 {
-    rows = 1024;
-    cols = 1024;
-    emit gridSizeChanged(rows, cols);
+
+    emit gridSizeChanged(1024, 1024);
     enableRecordStatistics = 1;
     std::vector<qreal> p0Sets = {0.1};
     for (qreal p0: p0Sets) {
@@ -315,8 +341,7 @@ void MyGridWidget::runTest1024()
 void MyGridWidget::runTest1()
 {
     int max_g = 0;
-    rows = 50;
-    cols = 50;
+    emit gridSizeChanged(50, 50);
     probabilityOfLive = 0.5;
     enableRecordStatistics = 1;
     changeGame(GAME_INDEX_CONWAYGAME);
@@ -350,8 +375,7 @@ void MyGridWidget::runTest1()
 
 void MyGridWidget::runTest2()
 {
-    rows = 256;
-    cols = 256;
+    emit gridSizeChanged(256, 256);
     enableRecordStatistics = 1;
     for (int gameIndex = GAME_INDEX_2X2; gameIndex < GAME_INDEX_MOVE; gameIndex++) {
         qDebug() << "game Idex: " << gameIndex;
@@ -370,8 +394,7 @@ void MyGridWidget::runTest2()
 
 void MyGridWidget::runTestP0AndSyncRateAndDensity()
 {
-    rows = 100;
-    cols = 100;
+    emit gridSizeChanged(100, 100);
     std::vector<qreal> syn_rates = {0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0};
     for (qreal initRate = 0.02; initRate<= 0.99; initRate += 0.02) {
         probabilityOfLive = initRate;
@@ -418,7 +441,7 @@ void MyGridWidget::changeGridSize(int index)
     delete game;
     destroyCells();
 
-    qDebug() << "grid index:" << index;
+    qDebug() << "Here grid index:" << index;
     if (GRID_INDEX_256 == index) {
         rows = GRID_SIZE_256;
         cols = GRID_SIZE_256;
@@ -438,6 +461,7 @@ void MyGridWidget::changeGridSize(int index)
 
 void MyGridWidget::changeRow(int value)
 {
+    qDebug() << "Here change Row:" << value;
     if(value == rows) {
         return;
     }
@@ -460,6 +484,8 @@ void MyGridWidget::changeRow(int value)
 
 void MyGridWidget::changeCollum(int value)
 {
+    qDebug() << "Here change Collum:" << value;
+
     if(value == cols) {
         return;
     }
@@ -617,6 +643,7 @@ double MyGridWidget::calculateCellHeight()
 
 void MyGridWidget::paintEvent(QPaintEvent* event)
 {
+    qDebug() << "Here Paint Event...";
     QPainter painter(this);
     qreal lineWidth = 0.0;
     qreal alpha = 0.0;

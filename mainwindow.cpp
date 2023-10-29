@@ -31,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->timerSlider->setValue(interval);
     ui->timerLabel->setText(QString::number(interval) + "ms");
 
-    int defaultGridSize = 256;
+    int defaultGridSize = 20;
     ui->rowSlider->setRange(20, 2000);
     ui->collumSlider->setRange(20, 2000);
     ui->rowSlider->setValue(defaultGridSize);
@@ -107,7 +107,6 @@ void MainWindow::onGridChanged(int rows, int cols)
     ui->currentGridLabel->setText(QString::number(rows) + " X " + QString::number(cols));
 
     if (rows != ui->rowSlider->value()) {
-        qDebug() << "sdfsfsfsfsfsf";
         ui->rowSlider->setValue(rows);
         ui->rowDisplay->setText("Rows: " + QString::number(rows));
     }
@@ -269,8 +268,9 @@ void MainWindow::on_runTestBtn_clicked()
 {
 //    grid->runTest1();
 //    grid->runTestP0AndSyncRateAndDensity();
-    grid->runTestLowerP0();
+//    grid->runTestLowerP0();
 //    grid->runTest1024();
+    grid->runTestEfficient();
 
 }
 
